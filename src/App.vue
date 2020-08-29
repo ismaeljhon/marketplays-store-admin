@@ -39,20 +39,7 @@
           justify="center"
         >
           <v-col class="text-center">
-            <v-tooltip left>
-              <template v-slot:activator="{ on }">
-                <v-btn
-                  :href="source"
-                  icon
-                  large
-                  target="_blank"
-                  v-on="on"
-                >
-                  <v-icon large>mdi-code-tags</v-icon>
-                </v-btn>
-              </template>
-              <span>Source</span>
-            </v-tooltip>
+            
           </v-col>
         </v-row>
       </v-container>
@@ -61,7 +48,7 @@
       color="indigo"
       app
     >
-      <span class="white--text">&copy; {{ new Date().getFullYear() }}</span>
+      <span class="white--text">Copyright &copy; {{ new Date().getFullYear() }} All Rights Reserved | Bickert Management Inc.</span>
     </v-footer>
   </v-app>
 </template>
@@ -76,18 +63,18 @@
       navigation: [
         { key: "dashboard", label: "Dashboard", icon: "dashboard" },
         { key: "orders", label: "Orders", icon: "shopping_cart" },
-        { key: "departments", label: "Departments", icon: "art_track" },
+        { key: "departments", label: "Departments", icon: "device_hub" },
         { key: "services", label: "Services", icon: "build" },
         { key: "subscriptions", label: "Subscriptions", icon: "subscriptions" },
         { key: "job-listing", label: "Job Listing", icon: "work_outline" },
         { key: "job-categories", label: "Job Categories", icon: "category" },
         { key: "divider" },
-        { key: "department-requests", label: "Department Requests", icon: "announcement", icon_color: "red darken-1"},
         { key: "email-template", label: "Email Template", icon: "mail_outline" },
         { key: "payment-integration", label: "Payment Integration", icon: "credit_card" },
-        { key: "currency", label: "Currency", icon: "local_atm" },
+        { key: "currency", label: "Currency", icon: "attach_money" },
         { key: "taxes", label: "Taxes", icon: "account_balance" },
-        { key: "coupons", label: "Coupons", icon: "receipt" },
+        { key: "coupons", label: "Coupons", icon: "local_atm" },
+        { key: "department-requests", label: "Department Requests", icon: "announcement", icon_color: "red darken-1"},
       ]
     }),
   }
