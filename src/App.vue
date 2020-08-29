@@ -27,6 +27,24 @@
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>MarketPlays Store Admin</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="white"
+            v-bind="attrs"
+            v-on="on"
+            text
+          >
+            Howdy, John Doe <v-icon>arrow_drop_down</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click.prevent="logout">
+            <v-list-item-title><v-icon class="mr-2">exit_to_app</v-icon>Logout</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <v-main>
@@ -77,5 +95,9 @@
         { key: "department-requests", label: "Department Requests", icon: "announcement", icon_color: "red darken-1"},
       ]
     }),
+    methods: {
+      logout() {
+      }
+    }
   }
 </script>
