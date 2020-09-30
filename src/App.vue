@@ -3,10 +3,11 @@
     <v-navigation-drawer
       v-model="drawer"
       app
+      clipped
     >
       <v-list dense>
         <div v-for="(item, index) in navigation" :key="index">
-          <v-list-item link v-if="item.key != 'divider'">
+          <v-list-item link v-if="item.key != 'divider'" :to="item.link">
             <v-list-item-action>
               <v-icon :color="item.icon_color || ''">{{ item.icon }}</v-icon>
             </v-list-item-action>
@@ -24,6 +25,7 @@
       app
       color="indigo"
       dark
+      clipped-left
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <v-toolbar-title>MarketPlays Store Admin</v-toolbar-title>
@@ -48,16 +50,10 @@
     </v-app-bar>
 
     <v-main>
-      <v-container
-        class="fill-height"
-        fluid
-      >
-        <v-row
-          align="center"
-          justify="center"
-        >
+      <v-container fluid>
+        <v-row>
           <v-col class="text-center">
-            
+              <router-view></router-view>
           </v-col>
         </v-row>
       </v-container>
@@ -81,11 +77,11 @@
       navigation: [
         { key: "dashboard", label: "Dashboard", icon: "dashboard" },
         { key: "orders", label: "Orders", icon: "shopping_cart" },
-        { key: "departments", label: "Departments", icon: "device_hub" },
-        { key: "services", label: "Services", icon: "build" },
+        { key: "departments", label: "Departments", icon: "business", link: '/departments'},
+        { key: "services", label: "Products", icon: "build" },
         { key: "subscriptions", label: "Subscriptions", icon: "subscriptions" },
         { key: "job-listing", label: "Job Listing", icon: "work_outline" },
-        { key: "job-categories", label: "Job Categories", icon: "category" },
+        { key: "job-categories", label: "Job Categories", icon: "device_hub" },
         { key: "divider" },
         { key: "email-template", label: "Email Template", icon: "mail_outline" },
         { key: "payment-integration", label: "Payment Integration", icon: "credit_card" },
