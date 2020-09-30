@@ -7,13 +7,13 @@
         </template>
         <v-card>
             <v-toolbar dark color="primary">
-                <v-btn icon dark @click="dialog = false">
+                <v-btn icon dark @click="reset">
                     <v-icon>close</v-icon>
                 </v-btn>
                 <v-toolbar-title>{{ title }}</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
-                    <v-btn dark text @click="dialog = false">Save</v-btn>
+                    <v-btn dark text @click="$refs.observer.handleSubmit(submit)">Save</v-btn>
                 </v-toolbar-items>
             </v-toolbar>
             
@@ -26,6 +26,18 @@
                                     <v-col cols="6">
                                         <h3 class="mb-2">General Information</h3>
                                         <v-divider class="mb-5"></v-divider>
+                                        <ValidationProvider v-slot="{ errors }" name="Team Lead" :rules="'required'">
+                                            <v-autocomplete
+                                                v-model="form.user_team_lead_id"
+                                                :items="users"
+                                                hide-no-data
+                                                item-text="ownerName"
+                                                item-value="ownerID"
+                                                label="Team Lead"
+                                                placeholder="Select Team Lead from the users"
+                                                :error-messages="errors"
+                                            ></v-autocomplete>
+                                        </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Code" :rules="'required'">
                                             <v-text-field
                                                 v-model="form.code"
@@ -111,6 +123,7 @@
 </template>
 <script>
 import _assign from 'lodash/assign'
+import Users from '@/assets/sample-data/users'
 
 export default {
     name: 'department-form-modal',
@@ -128,7 +141,8 @@ export default {
                 seo_keywords: null,
                 seo_description: null,
                 user_team_lead_id: null,
-            }
+            },
+            users: Users,
         }
     },
     methods: {

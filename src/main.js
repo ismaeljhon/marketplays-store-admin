@@ -28,6 +28,17 @@ for (let [rule, validation] of Object.entries(rules)) {
   });
 }
 
+import VueCurrencyFilter from 'vue-currency-filter'
+Vue.use(VueCurrencyFilter, {
+  symbol : '$',
+  thousandsSeparator: ',',
+  fractionCount: 2,
+  fractionSeparator: '.',
+  symbolPosition: 'front',
+  symbolSpacing: true,
+  avoidEmptyDecimals: undefined,
+})
+
 new Vue({
   router,
   store,

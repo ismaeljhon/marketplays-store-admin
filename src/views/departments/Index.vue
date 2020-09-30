@@ -20,6 +20,12 @@
                 :items-per-page="5"
                 class="elevation-1"
             >
+                <template slot="item.pricing" slot-scope="row">
+                    {{ row.item.pricing | currency }}
+                </template>
+                <template slot="item.user_team_lead_id" slot-scope="row">
+                    {{ get_team_lead_name(row.item.user_team_lead_id) }}
+                </template>
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
@@ -46,6 +52,8 @@
 import DepartmentFormModal from '@/views/departments/modals/Department'
 import TableMixin from '@/mixins/Table'
 import _assign from 'lodash/assign'
+import _find from 'lodash/find'
+import Users from '@/assets/sample-data/users'
 
 export default {
     name: 'departments',
@@ -61,18 +69,18 @@ export default {
                 { text: 'Code', align: 'start', value: 'code', width: "100px" },
                 { text: 'Name', align: 'start', value: 'name', },
                 { text: 'Pricing', align: 'start', value: 'pricing' },
-                { text: 'Team Lead', align: 'start', value: 'team_lead' },
+                { text: 'Team Lead', align: 'start', value: 'user_team_lead_id' },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "140px" },
             ],
             tableItems: {
                 departments: [
-                    { id: 1, name: "Systems/IT", code: "SYS", pricing: "1000", team_lead: "Eugenio Nadela" },
-                    { id: 2, name: "Marketing", code: "MKG", pricing: "900", team_lead: "Adnan Fasih" },
-                    { id: 3, name: "Wellth", code: "WTH", pricing: "1500", team_lead: "Jason Bickert" },
-                    { id: 4, name: "Customer Service", code: "CS", pricing: "1500", team_lead: "Michael Bickert" },
-                    { id: 5, name: "Administration", code: "ADM", pricing: "1000", team_lead: "Michael Bickert" },
-                    { id: 6, name: "Accounting", code: "ACT", pricing: "1000", team_lead: "Rolando Valdrez" },
-                    { id: 7, name: "Human Resources", code: "HR", pricing: "1000", team_lead: "Michael Bickert" },
+                    { id: 1, name: "Systems/IT", code: "SYS", pricing: "1000", team_lead: "Eugenio Nadela", user_team_lead_id: "488783000000146001" },
+                    { id: 2, name: "Marketing", code: "MKG", pricing: "900", team_lead: "Adnan Fasih", user_team_lead_id: "488783000001385005" },
+                    { id: 3, name: "Wellth", code: "WTH", pricing: "1500", team_lead: "Jason Bickert", user_team_lead_id: "488783000000328001" },
+                    { id: 4, name: "Customer Service", code: "CS", pricing: "1500", team_lead: "Michael Bickert", user_team_lead_id: "488783000000135005" },
+                    { id: 5, name: "Administration", code: "ADM", pricing: "1000", team_lead: "Michael Bickert", user_team_lead_id: "488783000000135005" },
+                    { id: 6, name: "Accounting", code: "ACT", pricing: "1000", team_lead: "Rolando Valdrez", user_team_lead_id: "488783000000383001" },
+                    { id: 7, name: "Human Resources", code: "HR", pricing: "1000", team_lead: "Michael Bickert", user_team_lead_id: "488783000000135005" },
                 ],
             }
         }
@@ -101,6 +109,13 @@ export default {
         saveItem(item) {
             this.tableItems.departments = this.updateCollectionItems(this.tableItems.departments, item)
         },
+        get_team_lead_name(userId) {
+            let user = _find(Users, o => { return o.ownerID == userId })
+
+            console.log(user)
+
+            return user ? user.ownerName : ""
+        }
     }
 }
 </script>
