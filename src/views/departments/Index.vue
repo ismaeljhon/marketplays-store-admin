@@ -51,7 +51,7 @@ export default {
     name: 'departments',
     mixins: [TableMixin],
     components: {
-        DepartmentFormModal
+        DepartmentFormModal,
     },
     data() {
         return {
@@ -90,11 +90,10 @@ export default {
                 if (willDelete) {
                     this.tableItems.departments = this.cleanCollectionItems(this.tableItems.departments, item)
 
-                    _assign(this.infoMessage, {
-                        show: true,
-                        icon: 'check',
-                        color: 'success',
-                        message: "Department has been successfully deleted",
+                    swal({
+                        title: "Success",
+                        icon: "success",
+                        text: "Department has been successfully deleted",
                     })
                 }
             });
