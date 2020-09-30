@@ -29,16 +29,16 @@
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small tile outlined v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.deparmentFormModal.show(row.item, false)">
-                                <v-icon small>edit</v-icon>
+                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.deparmentFormModal.show(row.item, false)">
+                                <v-icon>edit</v-icon>
                             </v-btn>
                         </template>
                         <span>Edit this item</span>
                     </v-tooltip>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small tile outlined v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItem(row.item)">
-                                <v-icon small>delete</v-icon>
+                            <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItem(row.item)">
+                                <v-icon>close</v-icon>
                             </v-btn>
                         </template>
                         <span>Delete this item</span>
@@ -70,7 +70,7 @@ export default {
                 { text: 'Name', align: 'start', value: 'name', },
                 { text: 'Pricing', align: 'start', value: 'pricing' },
                 { text: 'Team Lead', align: 'start', value: 'user_team_lead_id' },
-                { text: '', align: 'start', sortable: false, value: 'action', width: "140px" },
+                { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],
             tableItems: {
                 departments: [
