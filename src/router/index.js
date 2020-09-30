@@ -12,8 +12,13 @@ Vue.use(VueRouter)
   },
   {
     path: '/departments',
-    name: 'Department',
+    name: 'Departments',
     component: () => import('@/views/departments/Index.vue')
+  },
+  {
+    path: '/products',
+    name: 'Products',
+    component: () => import('@/views/products/Index.vue')
   }
 ]
 
