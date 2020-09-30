@@ -28,7 +28,7 @@
       clipped-left
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>MarketPlays Store Admin</v-toolbar-title>
+      <v-toolbar-title>MarketPlays E-Commerce</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
