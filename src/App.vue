@@ -77,8 +77,8 @@
       navigation: [
         { key: "dashboard", label: "Dashboard", icon: "dashboard" },
         { key: "orders", label: "Orders", icon: "shopping_cart" },
-        { key: "departments", label: "Departments", icon: "business", link: '/departments'},
-        { key: "services", label: "Products", icon: "local_offer" },
+        { key: "departments", label: "Departments", icon: "business", link: '/departments' },
+        { key: "services", label: "Products", icon: "local_offer", link: '/products' },
         { key: "subscriptions", label: "Subscriptions", icon: "subscriptions" },
         { key: "job-categories", label: "Job Categories", icon: "device_hub" },
         { key: "job-listing", label: "Job Listing", icon: "work_outline" },
