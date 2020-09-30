@@ -2,7 +2,7 @@
     <v-card>
         <v-card-title>
             <h3 class="mr-2">Products</h3>
-            <department-form-modal ref="deparmentFormModal" @saved="saveItem" />
+            <product-form-modal ref="productFormModal" @saved="saveItem" />
             <v-spacer></v-spacer>
             <v-text-field
                 v-model="search"
@@ -26,7 +26,7 @@
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.deparmentFormModal.show(row.item, false)">
+                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.productFormModal.show(row.item, false)">
                                 <v-icon>edit</v-icon>
                             </v-btn>
                         </template>
@@ -46,7 +46,7 @@
     </v-card>
 </template>
 <script>
-import DepartmentFormModal from '@/views/departments/modals/Department'
+import ProductFormModal from '@/views/products/modals/Product'
 import TableMixin from '@/mixins/Table'
 import _assign from 'lodash/assign'
 import _find from 'lodash/find'
@@ -57,7 +57,7 @@ export default {
     name: 'departments',
     mixins: [TableMixin],
     components: {
-        DepartmentFormModal,
+        ProductFormModal,
     },
     data() {
         return {

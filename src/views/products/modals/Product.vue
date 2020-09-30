@@ -126,7 +126,7 @@ import _assign from 'lodash/assign'
 import Users from '@/assets/sample-data/users'
 
 export default {
-    name: 'department-form-modal',
+    name: 'product-form-modal',
     data() {
         return {
             dialog: false,
@@ -178,13 +178,13 @@ export default {
             swal({
                 title: "Success",
                 icon: "success",
-                text: "Department has been successfully saved",
+                text: "Product has been successfully saved",
             })
         }
     },
     computed: {
         title() {
-            return this.isCreate ? "Adding New Department" : "Department"
+            return this.isCreate ? "Adding New Product" : "Product"
         }
     }
 }
