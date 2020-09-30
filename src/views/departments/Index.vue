@@ -54,6 +54,7 @@ import TableMixin from '@/mixins/Table'
 import _assign from 'lodash/assign'
 import _find from 'lodash/find'
 import Users from '@/assets/sample-data/users'
+import Departments from '@/assets/sample-data/departments'
 
 export default {
     name: 'departments',
@@ -73,15 +74,7 @@ export default {
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],
             tableItems: {
-                departments: [
-                    { id: 1, name: "Systems/IT", code: "SYS", pricing: "1000", team_lead: "Eugenio Nadela", user_team_lead_id: "488783000000146001" },
-                    { id: 2, name: "Marketing", code: "MKG", pricing: "900", team_lead: "Adnan Fasih", user_team_lead_id: "488783000001385005" },
-                    { id: 3, name: "Wellth", code: "WTH", pricing: "1500", team_lead: "Jason Bickert", user_team_lead_id: "488783000000328001" },
-                    { id: 4, name: "Customer Service", code: "CS", pricing: "1500", team_lead: "Michael Bickert", user_team_lead_id: "488783000000135005" },
-                    { id: 5, name: "Administration", code: "ADM", pricing: "1000", team_lead: "Michael Bickert", user_team_lead_id: "488783000000135005" },
-                    { id: 6, name: "Accounting", code: "ACT", pricing: "1000", team_lead: "Rolando Valdrez", user_team_lead_id: "488783000000383001" },
-                    { id: 7, name: "Human Resources", code: "HR", pricing: "1000", team_lead: "Michael Bickert", user_team_lead_id: "488783000000135005" },
-                ],
+                departments: Departments,
             }
         }
     },
