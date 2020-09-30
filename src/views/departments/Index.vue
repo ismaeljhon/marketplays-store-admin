@@ -16,7 +16,7 @@
             <v-data-table
                 :search="search"
                 :headers="headers"
-                :items="departments"
+                :items="tableItems.departments"
                 :items-per-page="5"
                 class="elevation-1"
             >
@@ -31,7 +31,7 @@
                     </v-tooltip>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small tile outlined v-bind="attrs" v-on="on" color="error">
+                            <v-btn small tile outlined v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItem(row.item)">
                                 <v-icon small>delete</v-icon>
                             </v-btn>
                         </template>
@@ -44,8 +44,12 @@
 </template>
 <script>
 import DepartmentFormModal from '@/views/departments/modals/Department'
+import TableMixin from '@/mixins/Table'
+import _assign from 'lodash/assign'
+
 export default {
     name: 'departments',
+    mixins: [TableMixin],
     components: {
         DepartmentFormModal
     },
@@ -53,26 +57,48 @@ export default {
         return {
             search: null,
             headers: [
-                { text: 'ID', align: 'start', value: 'id', width: "50px" },
+                { text: 'ID', align: 'start', value: 'id', width: "70px" },
                 { text: 'Code', align: 'start', value: 'code', width: "100px" },
                 { text: 'Name', align: 'start', value: 'name', },
                 { text: 'Pricing', align: 'start', value: 'pricing' },
                 { text: 'Team Lead', align: 'start', value: 'team_lead' },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "140px" },
             ],
-            departments: [
-                { id: 1, name: "Systems/IT", code: "SYS", pricing: "$1000 CAD", team_lead: "Eugenio Nadela"},
-                { id: 2, name: "Marketing", code: "MKG", pricing: "$900 CAD", team_lead: "Adnan Fasih"},
-                { id: 3, name: "Wellth", code: "WTH", pricing: "$1500 CAD", team_lead: "Jason Bickert"},
-                { id: 4, name: "Customer Service", code: "CS", pricing: "$1500 CAD", team_lead: "Michael Bickert"},
-                { id: 5, name: "Administration", code: "ADM", pricing: "$1000 CAD", team_lead: "Michael Bickert"},
-                { id: 6, name: "Accounting", code: "ACT", pricing: "$1000 CAD", team_lead: "Rolando Valdrez"},
-                { id: 6, name: "Human Resources", code: "HR", pricing: "$1000 CAD", team_lead: "Michael Bickert"},
-            ],
+            tableItems: {
+                departments: [
+                    { id: 1, name: "Systems/IT", code: "SYS", pricing: "$1000 CAD", team_lead: "Eugenio Nadela"},
+                    { id: 2, name: "Marketing", code: "MKG", pricing: "$900 CAD", team_lead: "Adnan Fasih"},
+                    { id: 3, name: "Wellth", code: "WTH", pricing: "$1500 CAD", team_lead: "Jason Bickert"},
+                    { id: 4, name: "Customer Service", code: "CS", pricing: "$1500 CAD", team_lead: "Michael Bickert"},
+                    { id: 5, name: "Administration", code: "ADM", pricing: "$1000 CAD", team_lead: "Michael Bickert"},
+                    { id: 6, name: "Accounting", code: "ACT", pricing: "$1000 CAD", team_lead: "Rolando Valdrez"},
+                    { id: 7, name: "Human Resources", code: "HR", pricing: "$1000 CAD", team_lead: "Michael Bickert"},
+                ],
+            }
         }
     },
     methods: {
+        deleteItem(item) {
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this one",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    this.tableItems.departments = this.cleanCollectionItems(this.tableItems.departments, item)
 
+                    _assign(this.infoMessage, {
+                        show: true,
+                        icon: 'check',
+                        color: 'success',
+                        message: "Department has been successfully deleted",
+                    })
+                }
+            });
+        }
     }
 }
 </script>
