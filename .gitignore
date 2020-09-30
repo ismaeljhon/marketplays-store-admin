@@ -22,4 +22,4 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-assets/sample-data/*
+src/assets/sample-data/
