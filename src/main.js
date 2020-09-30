@@ -11,6 +11,23 @@ Vue.config.productionTip = false
 import UtilMixin from '@/mixins/Utils'
 Vue.mixin(UtilMixin)
 
+import { ValidationProvider, ValidationObserver } from 'vee-validate';
+Vue.component('ValidationProvider', ValidationProvider);
+Vue.component('ValidationObserver', ValidationObserver);
+import { extend } from 'vee-validate';
+import * as rules from 'vee-validate/dist/rules';
+
+Object.keys(rules).forEach(rule => {
+  extend(rule, rules[rule]);
+});
+
+// with typescript
+for (let [rule, validation] of Object.entries(rules)) {
+  extend(rule, {
+    ...validation
+  });
+}
+
 new Vue({
   router,
   store,

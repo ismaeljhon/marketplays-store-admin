@@ -2,7 +2,7 @@
     <v-card>
         <v-card-title>
             <h3 class="mr-2">Departments</h3>
-            <department-form-modal />
+            <department-form-modal ref="deparmentFormModal" @saved="saveItem" />
             <v-spacer></v-spacer>
             <v-text-field
                 v-model="search"
@@ -23,7 +23,7 @@
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small tile outlined v-bind="attrs" v-on="on" color="info" class="mr-2">
+                            <v-btn small tile outlined v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.deparmentFormModal.show(row.item, false)">
                                 <v-icon small>edit</v-icon>
                             </v-btn>
                         </template>
@@ -66,13 +66,13 @@ export default {
             ],
             tableItems: {
                 departments: [
-                    { id: 1, name: "Systems/IT", code: "SYS", pricing: "$1000 CAD", team_lead: "Eugenio Nadela"},
-                    { id: 2, name: "Marketing", code: "MKG", pricing: "$900 CAD", team_lead: "Adnan Fasih"},
-                    { id: 3, name: "Wellth", code: "WTH", pricing: "$1500 CAD", team_lead: "Jason Bickert"},
-                    { id: 4, name: "Customer Service", code: "CS", pricing: "$1500 CAD", team_lead: "Michael Bickert"},
-                    { id: 5, name: "Administration", code: "ADM", pricing: "$1000 CAD", team_lead: "Michael Bickert"},
-                    { id: 6, name: "Accounting", code: "ACT", pricing: "$1000 CAD", team_lead: "Rolando Valdrez"},
-                    { id: 7, name: "Human Resources", code: "HR", pricing: "$1000 CAD", team_lead: "Michael Bickert"},
+                    { id: 1, name: "Systems/IT", code: "SYS", pricing: "1000", team_lead: "Eugenio Nadela" },
+                    { id: 2, name: "Marketing", code: "MKG", pricing: "900", team_lead: "Adnan Fasih" },
+                    { id: 3, name: "Wellth", code: "WTH", pricing: "1500", team_lead: "Jason Bickert" },
+                    { id: 4, name: "Customer Service", code: "CS", pricing: "1500", team_lead: "Michael Bickert" },
+                    { id: 5, name: "Administration", code: "ADM", pricing: "1000", team_lead: "Michael Bickert" },
+                    { id: 6, name: "Accounting", code: "ACT", pricing: "1000", team_lead: "Rolando Valdrez" },
+                    { id: 7, name: "Human Resources", code: "HR", pricing: "1000", team_lead: "Michael Bickert" },
                 ],
             }
         }
@@ -97,7 +97,10 @@ export default {
                     })
                 }
             });
-        }
+        },
+        saveItem(item) {
+            this.tableItems.departments = this.updateCollectionItems(this.tableItems.departments, item)
+        },
     }
 }
 </script>
