@@ -67,15 +67,6 @@
                                                 v-model="form.biddable"
                                             ></v-select>
                                         </ValidationProvider>
-                                        <ValidationProvider v-slot="{ errors }" name="Opening Market Bid Value" :rules="'required|numeric|min_value:1'">
-                                            <v-text-field 
-                                                type="number"
-                                                v-model="form.opening_market_bid" 
-                                                label="Opening Market Bid"
-                                                :error-messages="errors"
-                                                class="mb-3"
-                                            ></v-text-field>
-                                        </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Currency" :rules="'required'">
                                             <v-autocomplete
                                                 v-model="form.currency"
@@ -86,6 +77,18 @@
                                                 placeholder="Please Select Currency"
                                                 :error-messages="errors"
                                             ></v-autocomplete>
+                                        </ValidationProvider> 
+                                        <ValidationProvider v-slot="{ errors }" name="Opening Market Bid Value" :rules="'required|numeric|min_value:1'">
+                                            <v-text-field 
+                                                type="number"
+                                                v-model="form.opening_market_bid" 
+                                                :error-messages="errors"
+                                                class="mb-3"
+                                            >
+                                                <template slot="label">
+                                                    Opening Market Bid <small v-if="form.currency">(in {{ form.currency }})</small>
+                                                </template>
+                                            </v-text-field>
                                         </ValidationProvider>
                                     </v-col>
                                     <v-col cols="12">
