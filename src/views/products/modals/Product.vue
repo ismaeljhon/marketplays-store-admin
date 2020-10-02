@@ -53,14 +53,11 @@
                                                 label="Workforce Threshold"
                                             ></v-text-field>
                                         </ValidationProvider>
-                                        <ValidationProvider v-slot="{ errors }" name="Pricing" :rules="'required|numeric'">
-                                            <v-text-field
-                                                type="number"
-                                                v-model="form.pricing"
-                                                :error-messages="errors"
-                                                label="Pricing"
-                                            ></v-text-field>
-                                        </ValidationProvider>
+                                        <v-text-field v-model="form.short_description">
+                                            <template slot="label">
+                                                Short Description <small>(optional)</small>
+                                            </template>
+                                        </v-text-field>
                                     </v-col>
                                     <v-col cols="6">
                                         <ValidationProvider v-slot="{ errors }" name="Product Manager" :rules="'required'">
@@ -75,18 +72,26 @@
                                                 :error-messages="errors"
                                             ></v-autocomplete>
                                         </ValidationProvider>
-                                        <v-text-field v-model="form.short_description">
-                                            <template slot="label">
-                                                Short Description <small>(optional)</small>
-                                            </template>
-                                        </v-text-field>
-                                        <v-text-field 
-                                            v-model="form.description" 
-                                            label="Description">
-                                            <template slot="label">
-                                                Description <small>(optional)</small>
-                                            </template>
-                                        </v-text-field>
+                                        <ValidationProvider v-slot="{ errors }" name="Department" :rules="'required'">
+                                            <v-autocomplete
+                                                v-model="form.department_id"
+                                                :items="departments"
+                                                hide-no-data
+                                                item-text="name"
+                                                item-value="id"
+                                                label="Department"
+                                                placeholder="Select Department"
+                                                :error-messages="errors"
+                                            ></v-autocomplete>
+                                        </ValidationProvider>
+                                        <ValidationProvider v-slot="{ errors }" name="Pricing" :rules="'required|numeric'">
+                                            <v-text-field
+                                                type="number"
+                                                v-model="form.pricing"
+                                                :error-messages="errors"
+                                                label="Pricing"
+                                            ></v-text-field>
+                                        </ValidationProvider>
                                         <v-autocomplete 
                                             v-model="form.tags" 
                                             :items="tags" 
@@ -104,6 +109,15 @@
                                                 Tags <small>(optional)</small>
                                             </template>
                                         </v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="12">
+                                        <v-textarea
+                                            v-model="form.description" 
+                                            label="Description">
+                                            <template slot="label">
+                                                Description <small>(optional)</small>
+                                            </template>
+                                        </v-textarea>
                                     </v-col>
 
                                     <v-col cols="12" class="mt-5">
@@ -160,6 +174,7 @@
 <script>
 import _assign from 'lodash/assign'
 import Users from '@/assets/sample-data/users'
+import Departments from '@/assets/sample-data/departments'
 
 export default {
     name: 'product-form-modal',
@@ -181,6 +196,7 @@ export default {
                 user_project_manager_id: null,
             },
             users: Users,
+            departments: Departments,
             tags: ["seo", "web", "web development", "web design", "graphics"],
             tagDelimiter: ",",
             searchInput: null,
