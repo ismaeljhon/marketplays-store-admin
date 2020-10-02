@@ -80,7 +80,7 @@
         { key: "departments", label: "Departments", icon: "business", link: '/departments' },
         { key: "services", label: "Products", icon: "local_offer", link: '/products' },
         { key: "subscriptions", label: "Subscriptions", icon: "subscriptions" },
-        { key: "job-categories", label: "Job Categories", icon: "device_hub" },
+        { key: "job-categories", label: "Job Categories", icon: "device_hub", link: '/job-categories' },
         { key: "job-listing", label: "Job Listing", icon: "work_outline" },
         { key: "divider" },
         { key: "email-template", label: "Email Template", icon: "mail_outline" },
