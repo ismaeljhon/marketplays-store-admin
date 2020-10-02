@@ -81,7 +81,7 @@
         { key: "services", label: "Products", icon: "local_offer", link: '/products' },
         { key: "subscriptions", label: "Subscriptions", icon: "subscriptions" },
         { key: "job-categories", label: "Job Categories", icon: "device_hub", link: '/job-categories' },
-        { key: "job-listing", label: "Job Listing", icon: "work_outline" },
+        { key: "job-listing", label: "Job Listing", icon: "work_outline", link: '/jobs' },
         { key: "divider" },
         { key: "email-template", label: "Email Template", icon: "mail_outline" },
         { key: "payment-integration", label: "Payment Integration", icon: "credit_card" },

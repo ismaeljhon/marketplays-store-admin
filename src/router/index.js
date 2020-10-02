@@ -24,7 +24,12 @@ Vue.use(VueRouter)
     path: '/job-categories',
     name: 'Job Categories',
     component: () => import('@/views/job_categories/Index.vue')
-  }
+  },
+  {
+    path: '/jobs',
+    name: 'Job Listing',
+    component: () => import('@/views/jobs/Index.vue')
+  },
 ]
 
 const router = new VueRouter({

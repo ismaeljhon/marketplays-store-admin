@@ -1,6 +1,7 @@
 import _filter from 'lodash/filter'
 import _forEach from 'lodash/forEach'
 import _assign from 'lodash/assign'
+import Currencies from '@/assets/currency'
 
 export default {
     data() {
@@ -39,5 +40,13 @@ export default {
 
             return items;
         },
+        getCurrencies() {
+            let currencies = []
+            _forEach(Object.keys(Currencies), o => {
+                currencies.push(Currencies[o])
+            })
+
+            return currencies
+        }
     }
 }
