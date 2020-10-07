@@ -99,11 +99,8 @@
                                                 Description <small>(optional)</small>
                                             </template>
                                         </v-textarea>
-                                        <v-textarea v-model="form.instructions">
-                                            <template slot="label">
-                                                Instructions <small>(optional)</small>
-                                            </template>
-                                        </v-textarea>
+                                        <p class="my-2">Instructions <small>(optional)</small></p>
+                                        <vue-editor v-model="form.instructions"></vue-editor>
                                     </v-col>
                                     <v-col cols="12">
                                         <h3 class="mb-2">SEO</h3>
@@ -152,10 +149,14 @@
 import _assign from 'lodash/assign'
 import Users from '@/assets/sample-data/users'
 import UtilsMixin from '@/mixins/Utils'
+import { VueEditor } from "vue2-editor";
 
 export default {
     name: 'department-form-modal',
     mixins: [UtilsMixin],
+    components: {
+        VueEditor
+    },
     data() {
         return {
             dialog: false,
