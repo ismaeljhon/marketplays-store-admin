@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-title>
-            <h3 class="mr-2">Job Listing</h3>
+            <h3 class="mr-2"><v-icon>work_outline</v-icon> Job Listing</h3>
             <job-form-modal ref="jobFormModal" @saved="saveItem" />
             <v-spacer></v-spacer>
             <v-text-field

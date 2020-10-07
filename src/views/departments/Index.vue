@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-title>
-            <h3 class="mr-2">Departments</h3>
+            <h3 class="mr-2"><v-icon>business</v-icon> Departments</h3>
             <department-form-modal ref="deparmentFormModal" @saved="saveItem" />
             <v-spacer></v-spacer>
             <v-text-field

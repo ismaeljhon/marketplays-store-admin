@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-title>
-            <h3 class="mr-2">Job Categories</h3>
+            <h3 class="mr-2"><v-icon>device_hub</v-icon> Job Categories</h3>
             <job-category-form-modal ref="jobCategoryFormModal" @saved="saveItem" />
             <v-spacer></v-spacer>
             <v-text-field

@@ -1,7 +1,7 @@
 <template>
     <v-card>
         <v-card-title>
-            <h3 class="mr-2">Products</h3>
+            <h3 class="mr-2"><v-icon>local_offer</v-icon> Products</h3>
             <product-form-modal ref="productFormModal" @saved="saveItem" />
             <v-spacer></v-spacer>
             <v-text-field
