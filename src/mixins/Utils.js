@@ -40,6 +40,12 @@ export default {
 
             return items;
         },
+        addKeyToCollection(items, key, value) {
+            _forEach(items, o => { 
+                o[key] = value
+            })
+            return items
+        },
         getCurrencies() {
             let currencies = []
             _forEach(Object.keys(Currencies), o => {

@@ -6,10 +6,15 @@
             :items="items"
             :items-per-page="5"
             class="elevation-1"
+            v-model="selected"
+            show-select
+            @input="$emit('selected', selected)"
+            @dblclick:row="emitEdit"
         >
             <template slot="item.pricing" slot-scope="row">
                 {{ row.item.pricing | currency }}
             </template>
+            
             <template slot="item.action" slot-scope="row">
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
@@ -33,8 +38,13 @@
 </template>
 <script>
 import ProductFormModal from '@/views/products/modals/Product'
+import _forEach from 'lodash/forEach'
+import UtilsMixin from '@/mixins/Utils'
+
+
 export default {
     name: 'product-table-list',
+    mixins: [UtilsMixin],
     props: {
         items: {
             type: [Object, Array],
@@ -42,7 +52,7 @@ export default {
         },
         search: {
             type: String
-        }
+        },
     },
     data() {
         return {
@@ -53,6 +63,12 @@ export default {
                 { text: 'Pricing', align: 'start', value: 'pricing', width: "120px" },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],
+            selected: []
+        }
+    },
+    methods: {
+        emitEdit(e, row) {
+            this.$emit('edit', row.item)
         }
     }
 }

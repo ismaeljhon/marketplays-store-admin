@@ -52,7 +52,7 @@
     <v-main>
       <v-container fluid>
         <v-row>
-          <v-col class="text-center">
+          <v-col>
               <router-view></router-view>
           </v-col>
         </v-row>
