@@ -13,44 +13,15 @@
             ></v-text-field>
         </v-card-title>
         <v-card-text>
-            <v-data-table
-                :search="search"
-                :headers="headers"
-                :items="tableItems.products"
-                :items-per-page="5"
-                class="elevation-1"
-            >
-                <template slot="item.pricing" slot-scope="row">
-                    {{ row.item.pricing | currency }}
-                </template>
-                <template slot="item.action" slot-scope="row">
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.productFormModal.show(row.item, false)">
-                                <v-icon>edit</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Edit this item</span>
-                    </v-tooltip>
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItem(row.item)">
-                                <v-icon>close</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Delete this item</span>
-                    </v-tooltip>
-                </template>
-            </v-data-table>
+            <product-table-list :items="tableItems.products" :search="search" @edit="edit" @delete="deleteItem"></product-table-list>
         </v-card-text>
     </v-card>
 </template>
 <script>
 import ProductFormModal from '@/views/products/modals/Product'
+import ProductTableList from '@/views/products/components/ProductTableList'
 import TableMixin from '@/mixins/Table'
-import _assign from 'lodash/assign'
 import _find from 'lodash/find'
-import Users from '@/assets/sample-data/users'
 import Products from '@/assets/sample-data/products'
 
 export default {
@@ -58,6 +29,7 @@ export default {
     mixins: [TableMixin],
     components: {
         ProductFormModal,
+        ProductTableList
     },
     data() {
         return {
@@ -75,6 +47,9 @@ export default {
         }
     },
     methods: {
+        edit(item) {
+            this.$refs.productFormModal.show(item, false)
+        },
         deleteItem(item) {
             swal({
                 title: "Are you sure?",
@@ -98,10 +73,6 @@ export default {
         saveItem(item) {
             this.tableItems.products = this.updateCollectionItems(this.tableItems.products, item)
         },
-        get_manager_name(userId) {
-            let user = _find(Users, o => { return o.ownerID == userId })
-            return user ? user.ownerName : ""
-        }
     }
 }
 </script>
