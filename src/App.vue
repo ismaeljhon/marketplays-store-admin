@@ -83,12 +83,12 @@
         { key: "job-categories", label: "Job Categories", icon: "device_hub", link: '/job-categories' },
         { key: "job-listing", label: "Job Listing", icon: "work_outline", link: '/jobs' },
         { key: "divider" },
-        { key: "email-template", label: "Email Template", icon: "mail_outline" },
+        { key: "email-template", label: "Email Template", icon: "mail_outline", link: '/email-templates' },
         { key: "payment-integration", label: "Payment Integration", icon: "credit_card" },
         { key: "currency", label: "Currency", icon: "attach_money" },
         { key: "taxes", label: "Taxes", icon: "account_balance" },
         { key: "coupons", label: "Coupons", icon: "local_atm" },
-        { key: "department-requests", label: "Department Requests", icon: "announcement", icon_color: "red darken-1"},
+        { key: "department-requests", label: "Department Requests", icon: "announcement", icon_color: "orange darken-1"},
       ]
     }),
     methods: {
