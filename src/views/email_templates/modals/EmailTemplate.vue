@@ -32,8 +32,11 @@
                                                 label="Name"
                                             ></v-text-field>
                                         </ValidationProvider>
-                                        <p class="my-2">Content <small>(optional)</small></p>
-                                        <vue-editor v-model="form.content"></vue-editor>
+                                        <ValidationProvider v-slot="{ errors }" name="Email content" :rules="'required'">
+                                            <p class="my-2">Content</p>
+                                            <vue-editor v-model="form.content"></vue-editor>
+                                            <small class="red--text" v-if="errors.length">{{ errors | first_of_array }}</small>
+                                        </ValidationProvider>
                                     </v-col>
                                 </v-row>
                                 

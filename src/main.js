@@ -11,6 +11,8 @@ Vue.config.productionTip = false
 import UtilMixin from '@/mixins/Utils'
 Vue.mixin(UtilMixin)
 
+require('@/filters')
+
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
 Vue.component('ValidationProvider', ValidationProvider);
 Vue.component('ValidationObserver', ValidationObserver);
