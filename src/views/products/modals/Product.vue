@@ -111,13 +111,8 @@
                                         </v-autocomplete>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-textarea
-                                            v-model="form.description" 
-                                            label="Description">
-                                            <template slot="label">
-                                                Description <small>(optional)</small>
-                                            </template>
-                                        </v-textarea>
+                                        <p class="my-2">Description <small>(optional)</small></p>
+                                        <vue-editor v-model="form.description"></vue-editor>
                                     </v-col>
 
                                     <v-col cols="12" class="mt-5">
@@ -175,9 +170,13 @@
 import _assign from 'lodash/assign'
 import Users from '@/assets/sample-data/users'
 import Departments from '@/assets/sample-data/departments'
+import { VueEditor } from "vue2-editor";
 
 export default {
     name: 'product-form-modal',
+    components: {
+        VueEditor
+    },
     data() {
         return {
             dialog: false,
