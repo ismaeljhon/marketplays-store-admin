@@ -30,6 +30,11 @@ Vue.use(VueRouter)
     name: 'Job Listing',
     component: () => import('@/views/jobs/Index.vue')
   },
+  {
+    path: '/email-templates',
+    name: 'Email Templates',
+    component: () => import('@/views/email_templates/Index.vue')
+  },
 ]
 
 const router = new VueRouter({
