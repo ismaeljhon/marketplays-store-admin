@@ -34,9 +34,9 @@
                         </v-list>
                     </v-menu>
                     
-                    <v-tooltip bottom>
+                    <v-tooltip bottom v-if="gridOn">
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn v-if="gridOn" v-bind="attrs" v-on="on" icon small tile class="mr-2">
+                            <v-btn v-bind="attrs" v-on="on" icon small tile class="mr-2" :color="hasSelectedItems ? 'primary' : ''" @click.prevent="selectAll = !selectAll">
                                 <v-icon>playlist_add_check</v-icon>
                             </v-btn>
                         </template>
@@ -50,8 +50,8 @@
             </v-row>
         </v-card-title>
         <v-card-text>
-            <product-grid-view v-if="gridOn" :items="tableItems.products" @edit="edit" @delete="deleteItem" @selected="afterSelectedEvents" />
-            <product-table-list v-else ref="productTableList" :items="tableItems.products" :search="search" @edit="edit" @delete="deleteItem" @selected="afterSelectedEvents" />
+            <product-grid-view v-if="gridOn" :items="products" :select-all="selectAll" @edit="edit" @delete="deleteItem" @update-item="updateItem" />
+            <product-table-list v-else ref="productTableList" :items="products" :search="search" @edit="edit" @delete="deleteItem" @selected="afterSelectedEventsOnTableList" />
         </v-card-text>
     </v-card>
 </template>
@@ -60,7 +60,8 @@ import ProductFormModal from '@/views/products/modals/Product'
 import ProductTableList from '@/views/products/components/ProductTableList'
 import ProductGridView from '@/views/products/components/ProductGridView'
 import TableMixin from '@/mixins/Table'
-import _find from 'lodash/find'
+import _filter from 'lodash/filter'
+import _map from 'lodash/map'
 import Products from '@/assets/sample-data/products'
 
 export default {
@@ -74,11 +75,12 @@ export default {
     data() {
         return {
             gridOn: true,
+            selectAll: false,
             search: null,
             tableItems: {
                 products: Products,
             },
-            hasSelectedItems: false
+            selectedItems: []
         }
     },
     methods: {
@@ -108,9 +110,40 @@ export default {
         saveItem(item) {
             this.tableItems.products = this.updateCollectionItems(this.tableItems.products, item)
         },
-        afterSelectedEvents(items) {
-            this.hasSelectedItems = items.length ? true : false
+        afterSelectedEventsOnTableList(items) {
+            this.selectedItems = items
+        },
+        updateItem(item) {
+            this.tableItems.products = JSON.parse(JSON.stringify(this.updateCollectionItems(this.tableItems.products, item)))
         }
     },
+    computed: {
+        products() {
+            this.selectedItems = _filter(this.tableItems.products, { is_selected: true })
+            return this.tableItems.products
+        },
+        hasSelectedItems() {
+            let hasSelectedItems = this.selectedItems.length > 0
+
+            if (!hasSelectedItems) 
+                this.selectAll = false
+
+            return hasSelectedItems
+        }
+    },
+    watch: {
+        selectAll(newValue) {
+            this.tableItems.products = _map(this.tableItems.products, o => { 
+                o.is_selected = newValue
+                return o 
+            });
+        },
+        gridOn() {
+            this.tableItems.products = _map(this.tableItems.products, o => { 
+                o.is_selected = false
+                return o 
+            });
+        }
+    }
 }
 </script>

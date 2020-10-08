@@ -5,7 +5,7 @@
             :key="item.id"
             cols="3"
         >
-            <v-card>
+            <v-card outlined :raised="item.is_selected">
                 <v-img
                     :src="item.img ? item.img : require('@/assets/image-placeholder.jpg')"
                     class="white--text align-end"
@@ -16,6 +16,12 @@
                 </v-img>
 
                 <v-card-actions>
+                    <v-checkbox
+                        v-model="item.is_selected"
+                        class="py-0"
+                        color="success"
+                        @click.prevent="$emit('update-item', item)"
+                    ></v-checkbox>
                     <v-spacer></v-spacer>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
@@ -39,19 +45,16 @@
     </v-row>
 </template>
 <script>
+import _forEach from 'lodash/forEach'
 export default {
     name: 'product-grid-view',
     props: {
         items: {
             type: [Array, Object]
-        }
+        },
     },
     data: () => ({
-        cards: [
-            { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
-            { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6 },
-            { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 },
-        ],
+        
     }),
 }
 </script>

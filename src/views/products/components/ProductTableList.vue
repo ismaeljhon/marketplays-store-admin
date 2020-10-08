@@ -8,7 +8,7 @@
             class="elevation-1"
             v-model="selected"
             show-select
-            @input="$emit('selected', selected)"
+            @input="$emit('selected', selectedItems)"
             @dblclick:row="emitEdit"
         >
             <template slot="item.pricing" slot-scope="row">
@@ -68,6 +68,12 @@ export default {
     methods: {
         emitEdit(e, row) {
             this.$emit('edit', row.item)
+        }
+    },
+    computed: {
+        selectedItems() {
+            _forEach(this.selected, o => { o.is_selected = true })
+            return this.selected
         }
     }
 }
