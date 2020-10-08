@@ -13,9 +13,35 @@
                     <v-divider class="mb-3"></v-divider>
                 </v-col>
                 <v-col cols="6">
-                    <v-btn outlined tile small :color="!gridOn ? 'grey': 'success'" class="mr-2" @click.prevent="gridOn = !gridOn">
-                        <v-icon left>grid_on</v-icon> Grid View
-                    </v-btn>
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn v-bind="attrs" v-on="on" tile icon small class="mr-2" color="primary">
+                                <v-tooltip bottom>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-icon v-bind="attrs" v-on="on" >{{ gridOn ? 'grid_on' : 'view_list' }}</v-icon>
+                                    </template>
+                                    <span>View</span>
+                                </v-tooltip>
+                            </v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item @click.prevent="gridOn = true" :class="gridOn ? 'v-list-item--active' : ''">
+                                <v-list-item-title>Grid View</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item @click.prevent="gridOn = false" :class="!gridOn ? 'v-list-item--active' : ''">
+                                <v-list-item-title>List View</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                    
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn v-if="gridOn" v-bind="attrs" v-on="on" icon small tile class="mr-2">
+                                <v-icon>playlist_add_check</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Select All</span>
+                    </v-tooltip>
                     <v-btn v-if="hasSelectedItems" outlined small tile color="error" ><v-icon left>close</v-icon> Delete Selected</v-btn>
                 </v-col>
                 <v-col cols="6">
@@ -24,7 +50,7 @@
             </v-row>
         </v-card-title>
         <v-card-text>
-            <product-grid-view v-if="gridOn" :items="tableItems.products" @edit="edit" @delete="deleteItem" />
+            <product-grid-view v-if="gridOn" :items="tableItems.products" @edit="edit" @delete="deleteItem" @selected="afterSelectedEvents" />
             <product-table-list v-else ref="productTableList" :items="tableItems.products" :search="search" @edit="edit" @delete="deleteItem" @selected="afterSelectedEvents" />
         </v-card-text>
     </v-card>
