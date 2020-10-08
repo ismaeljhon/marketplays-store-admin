@@ -59,7 +59,6 @@ export default {
             headers: [
                 { text: 'ID', align: 'start', value: 'id', width: "70px" },
                 { text: 'Name', align: 'start', value: 'name', width: "200px"},
-                { text: 'Short Description', align: 'start', value: 'short_description' },
                 { text: 'Pricing', align: 'start', value: 'pricing', width: "120px" },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],

@@ -18,22 +18,21 @@
                     </v-btn>
                     <v-btn v-if="hasSelectedItems" outlined small tile color="error" ><v-icon left>close</v-icon> Delete Selected</v-btn>
                 </v-col>
-                <v-col cols="6" >
-                    <v-text-field outlined dense v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+                <v-col cols="6">
+                    <v-text-field dense filled v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
                 </v-col>
             </v-row>
         </v-card-title>
         <v-card-text>
-            <div v-if="gridOn" class="text-center">
-                <em>Not yet available</em>
-            </div>
-            <product-table-list v-else ref="productTableList" :items="tableItems.products" :search="search" @edit="edit" @delete="deleteItem" @selected="afterSelectedEvents"></product-table-list>
+            <product-grid-view v-if="gridOn" :items="tableItems.products" />
+            <product-table-list v-else ref="productTableList" :items="tableItems.products" :search="search" @edit="edit" @delete="deleteItem" @selected="afterSelectedEvents" />
         </v-card-text>
     </v-card>
 </template>
 <script>
 import ProductFormModal from '@/views/products/modals/Product'
 import ProductTableList from '@/views/products/components/ProductTableList'
+import ProductGridView from '@/views/products/components/ProductGridView'
 import TableMixin from '@/mixins/Table'
 import _find from 'lodash/find'
 import Products from '@/assets/sample-data/products'
@@ -43,11 +42,12 @@ export default {
     mixins: [TableMixin],
     components: {
         ProductFormModal,
-        ProductTableList
+        ProductTableList,
+        ProductGridView
     },
     data() {
         return {
-            gridOn: false,
+            gridOn: true,
             search: null,
             tableItems: {
                 products: Products,

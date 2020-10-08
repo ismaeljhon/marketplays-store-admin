@@ -7,7 +7,7 @@
     >
       <v-list dense>
         <div v-for="(item, index) in navigation" :key="index">
-          <v-list-item link v-if="item.key != 'divider'" :to="item.link">
+          <v-list-item link v-if="item.key != 'divider'" :to="item.link" :disabled="item.disabled">
             <v-list-item-action>
               <v-icon :color="item.icon_color || ''">{{ item.icon }}</v-icon>
             </v-list-item-action>
@@ -75,20 +75,20 @@
     data: () => ({
       drawer: null,
       navigation: [
-        { key: "dashboard", label: "Dashboard", icon: "dashboard" },
-        { key: "orders", label: "Orders", icon: "shopping_cart" },
+        { key: "dashboard", label: "Dashboard", icon: "dashboard", disabled: true },
+        { key: "orders", label: "Orders", icon: "shopping_cart", disabled: true },
         { key: "departments", label: "Departments", icon: "business", link: '/departments' },
         { key: "services", label: "Products", icon: "local_offer", link: '/products' },
-        { key: "subscriptions", label: "Subscriptions", icon: "subscriptions" },
+        { key: "subscriptions", label: "Subscriptions", icon: "subscriptions", disabled: true },
         { key: "job-categories", label: "Job Categories", icon: "device_hub", link: '/job-categories' },
         { key: "job-listing", label: "Job Listing", icon: "work_outline", link: '/jobs' },
         { key: "divider" },
         { key: "email-template", label: "Email Template", icon: "mail_outline", link: '/email-templates' },
-        { key: "payment-integration", label: "Payment Integration", icon: "credit_card" },
-        { key: "currency", label: "Currency", icon: "attach_money" },
-        { key: "taxes", label: "Taxes", icon: "account_balance" },
-        { key: "coupons", label: "Coupons", icon: "local_atm" },
-        { key: "department-requests", label: "Department Requests", icon: "announcement", icon_color: "orange darken-1"},
+        { key: "payment-integration", label: "Payment Integration", icon: "credit_card", disabled: true },
+        { key: "currency", label: "Currency", icon: "attach_money", disabled: true },
+        { key: "taxes", label: "Taxes", icon: "account_balance", disabled: true },
+        { key: "coupons", label: "Coupons", icon: "local_atm", disabled: true },
+        { key: "department-requests", label: "Department Requests", icon: "announcement", icon_color: "orange darken-1", disabled: true },
       ]
     }),
     methods: {
