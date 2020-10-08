@@ -24,7 +24,7 @@
             </v-row>
         </v-card-title>
         <v-card-text>
-            <product-grid-view v-if="gridOn" :items="tableItems.products" />
+            <product-grid-view v-if="gridOn" :items="tableItems.products" @edit="edit" @delete="deleteItem" />
             <product-table-list v-else ref="productTableList" :items="tableItems.products" :search="search" @edit="edit" @delete="deleteItem" @selected="afterSelectedEvents" />
         </v-card-text>
     </v-card>

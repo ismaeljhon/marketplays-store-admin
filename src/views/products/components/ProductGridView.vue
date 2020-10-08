@@ -17,13 +17,22 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-
-                    <v-btn icon color="primary">
-                        <v-icon>edit</v-icon>
-                    </v-btn>
-                    <v-btn icon color="error">
-                        <v-icon>close</v-icon>
-                    </v-btn>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn v-bind="attrs" v-on="on" icon color="primary" @click.prevent="$emit('edit', item)">
+                                <v-icon>edit</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Edit this Product</span>
+                    </v-tooltip>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn v-bind="attrs" v-on="on" icon color="error" @click.prevent="$emit('delete', item)">
+                                <v-icon>close</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Delete Product</span>
+                    </v-tooltip>
                 </v-card-actions>
             </v-card>
         </v-col>
