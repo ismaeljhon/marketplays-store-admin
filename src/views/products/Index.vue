@@ -42,7 +42,7 @@
                         </template>
                         <span>Select All</span>
                     </v-tooltip>
-                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" ><v-icon left>close</v-icon> Delete Selected</v-btn>
+                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(selectedItems)"><v-icon left>close</v-icon> Delete Selected</v-btn>
                 </v-col>
                 <v-col cols="6">
                     <v-text-field dense filled v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
@@ -50,8 +50,8 @@
             </v-row>
         </v-card-title>
         <v-card-text>
-            <product-grid-view v-if="gridOn" :items="products" :select-all="selectAll" @edit="edit" @delete="deleteItem" @update-item="updateItem" />
-            <product-table-list v-else ref="productTableList" :items="products" :search="search" @edit="edit" @delete="deleteItem" @selected="afterSelectedEventsOnTableList" />
+            <product-grid-view v-if="gridOn" :items="products" :select-all="selectAll" @edit="edit" @delete="deleteItems" @update-item="updateItem" />
+            <product-table-list v-else ref="productTableList" :items="products" :search="search" @edit="edit" @delete="deleteItems" @selected="afterSelectedEventsOnTableList" />
         </v-card-text>
     </v-card>
 </template>
@@ -87,7 +87,7 @@ export default {
         edit(item) {
             this.$refs.productFormModal.show(item, false)
         },
-        deleteItem(item) {
+        deleteItems(items) {
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to recover this one",
@@ -97,7 +97,7 @@ export default {
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    this.tableItems.products = this.cleanCollectionItems(this.tableItems.products, item)
+                    this.tableItems.products = this.cleanCollectionItems(this.tableItems.products, items)
 
                     swal({
                         title: "Success",

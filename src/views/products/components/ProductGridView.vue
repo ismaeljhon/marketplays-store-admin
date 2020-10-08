@@ -1,5 +1,10 @@
 <template>
     <v-row dense>
+        <v-col cols="12" v-if="items.length <= 0">
+            <v-divider></v-divider>
+            <p class="text-center mt-5 d-block"><em>No Data Available</em></p>
+        </v-col>
+        
         <v-col
             v-for="item in items"
             :key="item.id"

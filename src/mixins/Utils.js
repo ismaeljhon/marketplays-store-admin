@@ -1,6 +1,7 @@
 import _filter from 'lodash/filter'
 import _forEach from 'lodash/forEach'
 import _assign from 'lodash/assign'
+import _find from 'lodash/find'
 import Currencies from '@/assets/currency'
 
 export default {
@@ -15,8 +16,22 @@ export default {
         }
     },
     methods: {
-        cleanCollectionItems(items, item, key = "id") {
-            return _filter(items, o => { return o[key] != item[key] })
+        cleanCollectionItems(targetItems, items, key = "id") {
+            if (Array.isArray(items)) {
+                let cleanedItems = targetItems
+                _forEach(targetItems, o => {
+                    let itemFound = _find(items, i => { return o[key] == i[key] })
+
+                    if (itemFound)
+                        cleanedItems = _filter(cleanedItems, i => { return itemFound[key] != i[key] })
+
+                    console.log(cleanedItems)
+                })
+
+                return cleanedItems
+            }
+
+            return _filter(targetItems, o => { return o[key] != items[key] })
         },
         updateCollectionItems(items, item, key = "id") {
             let itemFound = false;
