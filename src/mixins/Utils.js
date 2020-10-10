@@ -24,8 +24,6 @@ export default {
 
                     if (itemFound)
                         cleanedItems = _filter(cleanedItems, i => { return itemFound[key] != i[key] })
-
-                    console.log(cleanedItems)
                 })
 
                 return cleanedItems

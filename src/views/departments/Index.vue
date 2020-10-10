@@ -122,9 +122,6 @@ export default {
         },
         get_team_lead_name(userId) {
             let user = _find(Users, o => { return o.ownerID == userId })
-
-            console.log(user)
-
             return user ? user.ownerName : ""
         },
         afterSelectedEventsOnTableList(items) {
