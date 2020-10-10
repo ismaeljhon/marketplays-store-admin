@@ -1,16 +1,28 @@
 <template>
     <v-card>
         <v-card-title>
-            <h3 class="mr-2"><v-icon>device_hub</v-icon> Job Categories</h3>
-            <job-category-form-modal ref="jobCategoryFormModal" @saved="saveItem" />
-            <v-spacer></v-spacer>
-            <v-text-field
-                v-model="search"
-                append-icon="search"
-                label="Search"
-                single-line
-                hide-details
-            ></v-text-field>
+            <v-row dense>
+                <v-col cols="5">
+                    <h3 class="mr-2"><v-icon>device_hub</v-icon> Job Categories</h3>
+                </v-col>
+                <v-col cols="7" class="text-right">
+                    <v-btn small class="mr-2" outlined tile><v-icon left>backup</v-icon> Export Job Categories</v-btn>
+                    <job-category-form-modal ref="jobCategoryFormModal" @saved="saveItem" />
+                </v-col>
+                <v-col cols="12">
+                    <v-divider class="my-2"></v-divider>
+                </v-col>
+                <v-col cols="6">
+                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)">
+                        <v-icon left>close</v-icon> Delete Selected
+                    </v-btn>
+                    <v-spacer v-else></v-spacer>
+                </v-col>
+                <v-col cols="6">
+                    <v-text-field dense filled single-line hide-details v-model="search" append-icon="search" label="Search"></v-text-field>
+                </v-col>
+                    
+            </v-row>
         </v-card-title>
         <v-card-text>
             <v-data-table
@@ -19,6 +31,9 @@
                 :items="tableItems.jobCategories"
                 :items-per-page="5"
                 class="elevation-1"
+                v-model="tableItems.selected"
+                show-select
+                @input="afterSelectedEventsOnTableList"
             >
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
@@ -31,7 +46,7 @@
                     </v-tooltip>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItem(row.item)">
+                            <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItems(row.item)">
                                 <v-icon>close</v-icon>
                             </v-btn>
                         </template>
@@ -63,11 +78,12 @@ export default {
             ],
             tableItems: {
                 jobCategories: JobCategories,
+                selected: []
             },
         }
     },
     methods: {
-        deleteItem(item) {
+        deleteItems(item) {
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to recover this one",
@@ -89,6 +105,9 @@ export default {
         },
         saveItem(item) {
             this.tableItems.jobCategories = this.updateCollectionItems(this.tableItems.jobCategories, item)
+        },
+        afterSelectedEventsOnTableList(items) {
+            this.tableItems.selected = items
         },
     }
 }
