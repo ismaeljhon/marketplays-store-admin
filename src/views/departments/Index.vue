@@ -1,16 +1,26 @@
 <template>
     <v-card>
         <v-card-title>
-            <h3 class="mr-2"><v-icon>business</v-icon> Departments</h3>
-            <department-form-modal ref="deparmentFormModal" @saved="saveItem" />
-            <v-spacer></v-spacer>
-            <v-text-field
-                v-model="search"
-                append-icon="search"
-                label="Search"
-                single-line
-                hide-details
-            ></v-text-field>
+            <v-row dense>
+                <v-col cols="5">
+                    <h3 class="mr-2"><v-icon>business</v-icon> Departments</h3>
+                </v-col>
+                <v-col cols="7" class="text-right">
+                    <v-btn small class="mr-2" outlined tile><v-icon left>backup</v-icon> Export Departments</v-btn>
+                    <department-form-modal ref="deparmentFormModal" @saved="saveItem" />
+                </v-col>
+                <v-col cols="12">
+                    <v-divider class="my-2"></v-divider>
+                </v-col>
+                <v-col cols="6">
+                    <v-spacer></v-spacer>
+                </v-col>
+                <v-col cols="6">
+                    <v-text-field dense filled single-line hide-details v-model="search" append-icon="search" label="Search"></v-text-field>
+                </v-col>
+                    
+            </v-row>
+            
         </v-card-title>
         <v-card-text>
             <v-data-table
