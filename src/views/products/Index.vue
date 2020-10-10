@@ -10,7 +10,7 @@
                     <product-form-modal ref="productFormModal" @saved="saveItem" />
                 </v-col>
                 <v-col cols="12">
-                    <v-divider class="mb-3"></v-divider>
+                    <v-divider class="my-2"></v-divider>
                 </v-col>
                 <v-col cols="6">
                     <v-menu offset-y>
@@ -42,7 +42,7 @@
                         </template>
                         <span>Select All</span>
                     </v-tooltip>
-                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(selectedItems)"><v-icon left>close</v-icon> Delete Selected</v-btn>
+                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)"><v-icon left>close</v-icon> Delete Selected</v-btn>
                 </v-col>
                 <v-col cols="6">
                     <v-text-field dense filled v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
@@ -79,6 +79,7 @@ export default {
             search: null,
             tableItems: {
                 products: Products,
+                selected: []
             },
             selectedItems: []
         }
@@ -111,7 +112,7 @@ export default {
             this.tableItems.products = this.updateCollectionItems(this.tableItems.products, item)
         },
         afterSelectedEventsOnTableList(items) {
-            this.selectedItems = items
+            this.tableItems.selected = items
         },
         updateItem(item) {
             this.tableItems.products = JSON.parse(JSON.stringify(this.updateCollectionItems(this.tableItems.products, item)))
@@ -119,11 +120,11 @@ export default {
     },
     computed: {
         products() {
-            this.selectedItems = _filter(this.tableItems.products, { is_selected: true })
+            this.tableItems.selected = _filter(this.tableItems.products, { is_selected: true })
             return this.tableItems.products
         },
         hasSelectedItems() {
-            let hasSelectedItems = this.selectedItems.length > 0
+            let hasSelectedItems = this.tableItems.selected.length > 0
 
             if (!hasSelectedItems) 
                 this.selectAll = false

@@ -12,7 +12,9 @@ let TableMixin = {
             tableItemsRoute: process.env.VUE_APP_URL, /* Route in for getting items from the api */
             tableParams: {},
             tableCurrentPage: 1,
-            tableItems: [],
+            tableItems: {
+                selected: []
+            },
 
             loading: false
         }
