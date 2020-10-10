@@ -28,7 +28,7 @@
             <v-data-table
                 :search="search"
                 :headers="headers"
-                :items="tableItems.jobCategories"
+                :items="jobCategories"
                 :items-per-page="5"
                 class="elevation-1"
                 v-model="tableItems.selected"
@@ -60,6 +60,7 @@
 <script>
 import JobCategoryFormModal from '@/views/job_categories/modals/JobCategory'
 import TableMixin from '@/mixins/Table'
+import _filter from 'lodash/filter'
 import JobCategories from '@/assets/sample-data/job_categories'
 
 export default {
@@ -109,6 +110,12 @@ export default {
         afterSelectedEventsOnTableList(items) {
             this.tableItems.selected = items
         },
-    }
+    },
+    computed: {
+        jobCategories() {
+            this.tableItems.selected = _filter(this.tableItems.jobCategories, { is_selected: true })
+            return this.tableItems.jobCategories
+        },
+    },
 }
 </script>

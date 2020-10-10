@@ -1,24 +1,39 @@
 <template>
     <v-card>
         <v-card-title>
-            <h3 class="mr-2"><v-icon>mail_outline</v-icon> Email Templates</h3>
-            <email-template-form-modal ref="emailTemplateFormModal" @saved="saveItem" />
-            <v-spacer></v-spacer>
-            <v-text-field
-                v-model="search"
-                append-icon="search"
-                label="Search"
-                single-line
-                hide-details
-            ></v-text-field>
+            <v-row dense>
+                <v-col cols="5">
+                    <h3 class="mr-2"><v-icon>mail_outline</v-icon> Email Templates</h3>
+                </v-col>
+                <v-col cols="7" class="text-right">
+                    <v-btn small class="mr-2" outlined tile><v-icon left>backup</v-icon> Export Email Templates</v-btn>
+                    <email-template-form-modal ref="emailTemplateFormModal" @saved="saveItem" />
+                </v-col>
+                <v-col cols="12">
+                    <v-divider class="my-2"></v-divider>
+                </v-col>
+                <v-col cols="6">
+                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)">
+                        <v-icon left>close</v-icon> Delete Selected
+                    </v-btn>
+                    <v-spacer v-else></v-spacer>
+                </v-col>
+                <v-col cols="6">
+                    <v-text-field dense filled single-line hide-details v-model="search" append-icon="search" label="Search"></v-text-field>
+                </v-col>
+                    
+            </v-row>
         </v-card-title>
         <v-card-text>
             <v-data-table
                 :search="search"
                 :headers="headers"
-                :items="tableItems.emailTemplates"
+                :items="emailTemplates"
                 :items-per-page="5"
                 class="elevation-1"
+                v-model="tableItems.selected"
+                show-select
+                @input="afterSelectedEventsOnTableList"
             >
                 
                 <template slot="item.action" slot-scope="row">
@@ -32,7 +47,7 @@
                     </v-tooltip>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItem(row.item)">
+                            <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItems(row.item)">
                                 <v-icon>close</v-icon>
                             </v-btn>
                         </template>
@@ -47,6 +62,7 @@
 import EmailTemplateFormModal from '@/views/email_templates/modals/EmailTemplate'
 import TableMixin from '@/mixins/Table'
 import _assign from 'lodash/assign'
+import _filter from 'lodash/filter'
 import _find from 'lodash/find'
 import EmailTemplates from '@/assets/sample-data/email_templates'
 
@@ -67,11 +83,12 @@ export default {
             ],
             tableItems: {
                 emailTemplates: EmailTemplates,
+                selected: []
             }
         }
     },
     methods: {
-        deleteItem(item) {
+        deleteItems(item) {
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to recover this one",
@@ -94,6 +111,15 @@ export default {
         saveItem(item) {
             this.tableItems.emailTemplates = this.updateCollectionItems(this.tableItems.emailTemplates, item)
         },
-    }
+        afterSelectedEventsOnTableList(items) {
+            this.tableItems.selected = items
+        },
+    },
+    computed: {
+        emailTemplates() {
+            this.tableItems.selected = _filter(this.tableItems.emailTemplates, { is_selected: true })
+            return this.tableItems.emailTemplates
+        },
+    },
 }
 </script>
