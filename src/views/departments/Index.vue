@@ -13,7 +13,10 @@
                     <v-divider class="my-2"></v-divider>
                 </v-col>
                 <v-col cols="6">
-                    <v-spacer></v-spacer>
+                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)">
+                        <v-icon left>close</v-icon> Delete Selected
+                    </v-btn>
+                    <v-spacer v-else></v-spacer>
                 </v-col>
                 <v-col cols="6">
                     <v-text-field dense filled single-line hide-details v-model="search" append-icon="search" label="Search"></v-text-field>
@@ -26,9 +29,12 @@
             <v-data-table
                 :search="search"
                 :headers="headers"
-                :items="tableItems.departments"
+                :items="departments"
                 :items-per-page="5"
                 class="elevation-1"
+                v-model="tableItems.selected"
+                show-select
+                @input="afterSelectedEventsOnTableList"
             >
                 <template slot="item.pricing" slot-scope="row">
                     {{ row.item.pricing | currency }}
@@ -47,7 +53,7 @@
                     </v-tooltip>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItem(row.item)">
+                            <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItems(row.item)">
                                 <v-icon>close</v-icon>
                             </v-btn>
                         </template>
@@ -63,6 +69,7 @@ import DepartmentFormModal from '@/views/departments/modals/Department'
 import TableMixin from '@/mixins/Table'
 import _assign from 'lodash/assign'
 import _find from 'lodash/find'
+import _filter from 'lodash/filter'
 import Users from '@/assets/sample-data/users'
 import Departments from '@/assets/sample-data/departments'
 
@@ -85,11 +92,12 @@ export default {
             ],
             tableItems: {
                 departments: Departments,
+                selected: []
             }
         }
     },
     methods: {
-        deleteItem(item) {
+        deleteItems(items) {
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to recover this one",
@@ -99,12 +107,12 @@ export default {
             })
             .then((willDelete) => {
                 if (willDelete) {
-                    this.tableItems.departments = this.cleanCollectionItems(this.tableItems.departments, item)
+                    this.tableItems.departments = this.cleanCollectionItems(this.tableItems.departments, items)
 
                     swal({
                         title: "Success",
                         icon: "success",
-                        text: "Department has been successfully deleted",
+                        text: "Department(s) has been successfully deleted",
                     })
                 }
             });
@@ -118,7 +126,16 @@ export default {
             console.log(user)
 
             return user ? user.ownerName : ""
-        }
-    }
+        },
+        afterSelectedEventsOnTableList(items) {
+            this.tableItems.selected = items
+        },
+    },
+    computed: {
+        departments() {
+            this.tableItems.selected = _filter(this.tableItems.departments, { is_selected: true })
+            return this.tableItems.departments
+        },
+    },
 }
 </script>

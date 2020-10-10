@@ -60,6 +60,11 @@ let TableMixin = {
             this.getItems()
         }
     },
+    computed: {
+        hasSelectedItems() {
+            return this.tableItems.selected.length > 0
+        }
+    },
     watch: {
         tableCurrentPage: {
             handler: 'getItems',

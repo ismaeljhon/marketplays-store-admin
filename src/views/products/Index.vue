@@ -123,16 +123,12 @@ export default {
             this.tableItems.selected = _filter(this.tableItems.products, { is_selected: true })
             return this.tableItems.products
         },
-        hasSelectedItems() {
-            let hasSelectedItems = this.tableItems.selected.length > 0
-
-            if (!hasSelectedItems) 
-                this.selectAll = false
-
-            return hasSelectedItems
-        }
     },
     watch: {
+        hasSelectedItems(newValue) {
+            if (!newValue) 
+                this.selectAll = false
+        },
         selectAll(newValue) {
             this.tableItems.products = _map(this.tableItems.products, o => { 
                 o.is_selected = newValue
