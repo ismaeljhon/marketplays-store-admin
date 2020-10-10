@@ -15,6 +15,7 @@
     "vee-validate": "^3.4.0",
     "vue": "^2.6.11",
     "vue-currency-filter": "^5.2.0",
+    "vue-json-csv": "^1.2.11",
     "vue-router": "^3.2.0",
     "vue2-editor": "^2.10.2",
     "vuetify": "^2.2.11",

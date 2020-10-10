@@ -6,7 +6,10 @@
                     <h3 class="mr-2"><v-icon>device_hub</v-icon> Job Categories</h3>
                 </v-col>
                 <v-col cols="7" class="text-right">
-                    <v-btn small class="mr-2" outlined tile><v-icon left>backup</v-icon> Export Job Categories</v-btn>
+                    <v-btn small class="mr-2" outlined tile><v-icon left>backup</v-icon> </v-btn>
+                    <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="jobCategories" style="cursor: pointer">
+                        <v-icon left>backup</v-icon>  Export Job Categories
+                    </download-csv>
                     <job-category-form-modal ref="jobCategoryFormModal" @saved="saveItem" />
                 </v-col>
                 <v-col cols="12">

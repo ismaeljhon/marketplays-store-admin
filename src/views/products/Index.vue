@@ -6,7 +6,9 @@
                     <h3 class="mr-2"><v-icon left>local_offer</v-icon> Products</h3>
                 </v-col>
                 <v-col cols="7" class="text-right">
-                    <v-btn small class="mr-2" outlined tile><v-icon left>backup</v-icon> Export Products</v-btn>
+                    <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="products" style="cursor: pointer">
+                        <v-icon left>backup</v-icon>  Export Products
+                    </download-csv>
                     <product-form-modal ref="productFormModal" @saved="saveItem" />
                 </v-col>
                 <v-col cols="12">

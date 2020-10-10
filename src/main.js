@@ -41,6 +41,9 @@ Vue.use(VueCurrencyFilter, {
   avoidEmptyDecimals: undefined,
 })
 
+import JsonCSV from 'vue-json-csv'
+Vue.component('downloadCsv', JsonCSV)
+
 new Vue({
   router,
   store,

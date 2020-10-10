@@ -6,7 +6,9 @@
                     <h3 class="mr-2"><v-icon>mail_outline</v-icon> Email Templates</h3>
                 </v-col>
                 <v-col cols="7" class="text-right">
-                    <v-btn small class="mr-2" outlined tile><v-icon left>backup</v-icon> Export Email Templates</v-btn>
+                    <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="emailTemplates" style="cursor: pointer">
+                        <v-icon left>backup</v-icon>  Export Email Templates
+                    </download-csv>
                     <email-template-form-modal ref="emailTemplateFormModal" @saved="saveItem" />
                 </v-col>
                 <v-col cols="12">
