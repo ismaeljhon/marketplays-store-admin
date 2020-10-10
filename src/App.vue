@@ -78,7 +78,7 @@
         { key: "dashboard", label: "Dashboard", icon: "dashboard", disabled: true },
         { key: "orders", label: "Orders", icon: "shopping_cart", disabled: true },
         { key: "departments", label: "Departments", icon: "business", link: '/departments' },
-        { key: "services", label: "Products", icon: "local_offer", link: '/products' },
+        { key: "services", label: "Products & Services", icon: "local_offer", link: '/products' },
         { key: "subscriptions", label: "Subscriptions", icon: "subscriptions", disabled: true },
         { key: "job-categories", label: "Job Categories", icon: "device_hub", link: '/job-categories' },
         { key: "job-listing", label: "Job Listing", icon: "work_outline", link: '/jobs' },
