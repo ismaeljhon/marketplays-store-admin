@@ -1,8 +1,8 @@
 <template>
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition" persistent>
         <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on" fab x-small>
-                <v-icon>add</v-icon>
+            <v-btn color="primary" dark v-bind="attrs" v-on="on" small>
+                <v-icon left>add</v-icon> Add Job
             </v-btn>
         </template>
         <v-card>
