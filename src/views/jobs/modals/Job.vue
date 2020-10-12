@@ -46,16 +46,27 @@
                                                 class="mb-3"
                                             ></v-text-field>
                                         </ValidationProvider>
-                                        <ValidationProvider v-slot="{ errors }" name="Timeframe" :rules="'required|numeric|min_value:1'">
-                                            <v-text-field
-                                                type="number"
-                                                v-model="form.timeframe" 
+                                        <ValidationProvider v-slot="{ errors }" name="Required Certificates" :rules="'required'">
+                                            <v-autocomplete
+                                                v-model="form.required_certificates"
+                                                :items="requiredCertificates"
+                                                item-text="name"
+                                                item-value="code"
+                                                label="Required Certificates"
                                                 :error-messages="errors"
-                                            >
-                                                <template slot="label">
-                                                    Timeframe <small>(in minutes)</small>
-                                                </template>
-                                            </v-text-field>
+                                                chips
+                                                multiple
+                                            ></v-autocomplete>
+                                        </ValidationProvider> 
+                                        <ValidationProvider v-slot="{ errors }" name="Job Type" :rules="'required'">
+                                            <v-select
+                                                :items="jobTypes"
+                                                label="Job Type"
+                                                :error-messages="errors"
+                                                v-model="form.job_type_id"
+                                                item-text="name"
+                                                item-value="id"
+                                            ></v-select>
                                         </ValidationProvider>
                                     </v-col>
                                     <v-col cols="6">
@@ -76,6 +87,7 @@
                                                 label="Currency"
                                                 placeholder="Please Select Currency"
                                                 :error-messages="errors"
+                                                class="mb-6"
                                             ></v-autocomplete>
                                         </ValidationProvider> 
                                         <ValidationProvider v-slot="{ errors }" name="Opening Market Bid Value" :rules="'required|numeric|min_value:1'">
@@ -83,10 +95,20 @@
                                                 type="number"
                                                 v-model="form.opening_market_bid" 
                                                 :error-messages="errors"
-                                                class="mb-3"
                                             >
                                                 <template slot="label">
                                                     Opening Market Bid <small v-if="form.currency">(in {{ form.currency }})</small>
+                                                </template>
+                                            </v-text-field>
+                                        </ValidationProvider>
+                                        <ValidationProvider v-slot="{ errors }" name="Timeframe" :rules="'required|numeric|min_value:1'">
+                                            <v-text-field
+                                                type="number"
+                                                v-model="form.timeframe" 
+                                                :error-messages="errors"
+                                            >
+                                                <template slot="label">
+                                                    Timeframe <small>(in minutes)</small>
                                                 </template>
                                             </v-text-field>
                                         </ValidationProvider>
@@ -150,6 +172,7 @@ import _assign from 'lodash/assign'
 import Users from '@/assets/sample-data/users'
 import UtilsMixin from '@/mixins/Utils'
 import { VueEditor } from "vue2-editor";
+import RequiredCertificates from '@/assets/sample-data/required_certificates'
 
 export default {
     name: 'department-form-modal',
@@ -168,19 +191,25 @@ export default {
                 instructions: null,
                 biddable: null,
                 opening_market_bid: null,
+                job_type_id: null,
                 timeframe: null, // in minutes
                 seo_title: null,
                 seo_keywords: null,
                 seo_description: null,
                 currency: null,
-                required_certificates: null,
-                job_category_id: null
+                required_certificates: [],
+                job_category_id: null,
             },
             users: Users,
             currencies: [],
             canBidItems: [
                 { value: true, text: 'Yes' },
                 { value: false, text: 'No' },
+            ],
+            requiredCertificates: RequiredCertificates,
+            jobTypes: [
+                { id: 1, name: "Project-Based" },
+                { id: 2, name: "Hourly Rate" },
             ]
         }
     },
@@ -202,13 +231,14 @@ export default {
                     instructions: null,
                     biddable: null,
                     opening_market_bid: null,
-                    timeframe: null,
+                    job_type_id: null,
+                    timeframe: null, // in minutes
                     seo_title: null,
                     seo_keywords: null,
                     seo_description: null,
                     currency: null,
-                    required_certificates: null,
-                    job_category_id: null
+                    required_certificates: [],
+                    job_category_id: null,
                 },
                 isCreate: true,
                 dialog: false
