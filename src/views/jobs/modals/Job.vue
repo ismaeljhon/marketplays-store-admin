@@ -70,10 +70,10 @@
                                         </ValidationProvider>
                                     </v-col>
                                     <v-col cols="6">
-                                        <ValidationProvider v-slot="{ errors }" name="Can Bid " :rules="'required'">
+                                        <ValidationProvider v-slot="{ errors }" name="Open for Bid?" :rules="'required'">
                                             <v-select
                                                 :items="canBidItems"
-                                                label="Can Bid?"
+                                                label="Open for Bid?"
                                                 :error-messages="errors"
                                                 v-model="form.biddable"
                                             ></v-select>
