@@ -61,18 +61,6 @@
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="6">
-                                        <ValidationProvider v-slot="{ errors }" name="Product Manager" :rules="'required'">
-                                            <v-autocomplete
-                                                v-model="form.user_project_manager_id"
-                                                :items="users"
-                                                hide-no-data
-                                                item-text="ownerName"
-                                                item-value="ownerID"
-                                                label="Product Manager"
-                                                placeholder="Select Team Product Manager from the users"
-                                                :error-messages="errors"
-                                            ></v-autocomplete>
-                                        </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Department" :rules="'required'">
                                             <v-autocomplete
                                                 v-model="form.department_id"
@@ -82,6 +70,18 @@
                                                 item-value="id"
                                                 label="Department"
                                                 placeholder="Select Department"
+                                                :error-messages="errors"
+                                            ></v-autocomplete>
+                                        </ValidationProvider>
+                                        <ValidationProvider v-slot="{ errors }" name="Product Manager" :rules="'required'">
+                                            <v-autocomplete
+                                                v-model="form.user_project_manager_id"
+                                                :items="users"
+                                                hide-no-data
+                                                item-text="ownerName"
+                                                item-value="ownerID"
+                                                label="Product Manager"
+                                                placeholder="Select Team Product Manager from the users"
                                                 :error-messages="errors"
                                             ></v-autocomplete>
                                         </ValidationProvider>
