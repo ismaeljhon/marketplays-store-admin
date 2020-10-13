@@ -32,7 +32,6 @@
                 :headers="headers"
                 :items="jobCategories"
                 :items-per-page="5"
-                class="elevation-1"
                 v-model="tableItems.selected"
                 show-select
                 @input="afterSelectedEventsOnTableList"

@@ -42,12 +42,12 @@ export default {
             })
 
             if (!itemFound) {
-                let maxId = items[0].id
+                let maxId = items.length > 1 && items[0][key] ? items[0][key] : 0
                 _forEach(items, o => {
-                    if (o.id > maxId)
-                        maxId = o.id
+                    if (o[key] > maxId)
+                        maxId = o.[key]
                 })
-                item.id = maxId + 1
+                item[key] = maxId + 1
                 items.push(item)
             }
 

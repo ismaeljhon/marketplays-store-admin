@@ -5,7 +5,6 @@
             :headers="headers"
             :items="items"
             :items-per-page="5"
-            class="elevation-1"
             v-model="selected"
             show-select
             @input="$emit('selected', selectedItems)"
