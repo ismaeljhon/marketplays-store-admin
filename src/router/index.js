@@ -41,4 +41,9 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  document.title = to.name + " - " + process.env.VUE_APP_NAME
+  next()
+})
+
 export default router
