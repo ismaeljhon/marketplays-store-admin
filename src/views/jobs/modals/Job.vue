@@ -46,24 +46,22 @@
                                                 class="mb-3"
                                             ></v-text-field>
                                         </ValidationProvider>
-                                        <ValidationProvider v-slot="{ errors }" name="Required Certificates" :rules="'required'">
-                                            <v-autocomplete
-                                                v-model="form.required_certificates"
-                                                :items="requiredCertificates"
-                                                item-text="name"
-                                                item-value="code"
-                                                label="Required Certificates"
-                                                :error-messages="errors"
-                                                chips
-                                                multiple
-                                            ></v-autocomplete>
-                                        </ValidationProvider> 
                                         <ValidationProvider v-slot="{ errors }" name="Job Type" :rules="'required'">
                                             <v-select
                                                 :items="jobTypes"
                                                 label="Job Type"
                                                 :error-messages="errors"
                                                 v-model="form.job_type_id"
+                                                item-text="name"
+                                                item-value="id"
+                                            ></v-select>
+                                        </ValidationProvider>
+                                        <ValidationProvider v-slot="{ errors }" name="Category" :rules="'required'">
+                                            <v-select
+                                                :items="jobCategories"
+                                                label="Category"
+                                                :error-messages="errors"
+                                                v-model="form.job_category_id"
                                                 item-text="name"
                                                 item-value="id"
                                             ></v-select>
@@ -114,6 +112,18 @@
                                         </ValidationProvider>
                                     </v-col>
                                     <v-col cols="12">
+                                        <ValidationProvider v-slot="{ errors }" name="Required Certificates" :rules="'required'">
+                                            <v-autocomplete
+                                                v-model="form.required_certificates"
+                                                :items="requiredCertificates"
+                                                item-text="name"
+                                                item-value="code"
+                                                label="Required Certificates"
+                                                :error-messages="errors"
+                                                chips
+                                                multiple
+                                            ></v-autocomplete>
+                                        </ValidationProvider> 
                                         <v-textarea 
                                             v-model="form.description" 
                                             label="Description">
@@ -173,6 +183,7 @@ import Users from '@/assets/sample-data/users'
 import UtilsMixin from '@/mixins/Utils'
 import { VueEditor } from "vue2-editor";
 import RequiredCertificates from '@/assets/sample-data/required_certificates'
+import JobCategories from '@/assets/sample-data/job_categories'
 
 export default {
     name: 'department-form-modal',
@@ -201,6 +212,7 @@ export default {
                 job_category_id: null,
             },
             users: Users,
+            jobCategories: JobCategories,
             currencies: [],
             canBidItems: [
                 { value: true, text: 'Yes' },
