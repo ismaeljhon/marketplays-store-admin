@@ -27,18 +27,18 @@
                                     <v-col cols="6">
                                         <h3 class="mb-2">General Information</h3>
                                         <v-divider class="mb-5"></v-divider>
-                                        <ValidationProvider v-slot="{ errors }" name="Team Lead" :rules="'required'">
-                                            <v-autocomplete
-                                                v-model="form.user_team_lead_id"
-                                                :items="users"
-                                                hide-no-data
-                                                item-text="ownerName"
-                                                item-value="ownerID"
-                                                label="Team Lead"
-                                                placeholder="Select Team Lead from the users"
-                                                :error-messages="errors"
-                                            ></v-autocomplete>
-                                        </ValidationProvider>
+                                        <v-autocomplete
+                                            v-model="form.user_team_lead_id"
+                                            :items="users"
+                                            hide-no-data
+                                            item-text="ownerName"
+                                            item-value="ownerID"
+                                            placeholder="Select Team Lead from the users"
+                                        >
+                                            <template slot="label">
+                                                Team Lead <small>(optional)</small>
+                                            </template>
+                                        </v-autocomplete>
                                         <ValidationProvider v-slot="{ errors }" name="Code" :rules="'required'">
                                             <v-text-field
                                                 v-model="form.code"
@@ -125,6 +125,7 @@
 <script>
 import _assign from 'lodash/assign'
 import Users from '@/assets/sample-data/users'
+import gql from 'graphql-tag'
 
 export default {
     name: 'department-form-modal',
@@ -146,10 +147,34 @@ export default {
         item: null,
     }),
     methods: {
-        show(item = {}, isCreate = true) {
+        async show(id, isCreate = true) {
+            await this.$apollo.addSmartQuery('item', {
+                query: gql`
+                    query department($id: MongoID!) {
+                        department(
+                            _id: $id
+                        ) {
+                            _id,
+                            name,
+                            code,
+                            description,
+                            pricing,
+                            slug,
+                            teamLead {
+                                _id,
+                                fullName
+                            }
+                        }
+                    }
+                `,
+                variables: () => ({
+                    id: id
+                }),
+                update: data => data.department
+            })
+
             _assign(this, {
-                item: item,
-                form: JSON.parse(JSON.stringify(item)),
+                form: JSON.parse(JSON.stringify(this.item)),
                 isCreate: isCreate,
                 dialog: true
             })
@@ -169,7 +194,9 @@ export default {
                 },
                 isCreate: true,
                 dialog: false,
-                item: null,
+                item: {
+                    id: null
+                },
             })
             this.$refs.observer.reset()
         },

@@ -48,7 +48,7 @@
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.deparmentFormModal.show(row.item, false)">
+                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.deparmentFormModal.show(row.item._id, false)">
                                 <v-icon>edit</v-icon>
                             </v-btn>
                         </template>
@@ -146,7 +146,7 @@ export default {
                         })
                         this.$apollo.queries.departments.refetch()
                     } else {
-                        
+
                     }
                 }
             });
