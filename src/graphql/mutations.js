@@ -12,8 +12,8 @@ export default {
         async createMutation(model, record) {
             return await this.$apollo.mutate({
                 mutation: gql` 
-                    mutation ${model}CreateOne($record: CreateOne${model}Input!) {
-                        ${model}CreateOne(
+                    mutation createOne${model}($record: CreateOne${model}Input!) {
+                        createOne${model}(
                             record: $record
                         ){
                             record {
@@ -36,7 +36,7 @@ export default {
                     record: record
                 },
             }).then(response => {
-                return response.data[model+"CreateOne"].record
+                return response.data["createOne" + model].record
             }).catch(() => {
                 swal({
                     title: "Error",
@@ -49,8 +49,8 @@ export default {
         async updateMutation(model, record, _id) {
             return await this.$apollo.mutate({
                 mutation: gql` 
-                    mutation ${model}UpdateById($_id: MongoID!, $record: UpdateById${model}Input!) {
-                        ${model}UpdateById(
+                    mutation update${model}ById($_id: MongoID!, $record: UpdateById${model}Input!) {
+                        update${model}ById(
                             _id: $_id
                             record: $record
                         ){
@@ -75,7 +75,7 @@ export default {
                     record: record
                 },
             }).then(response => {
-                return response.data[model+"UpdateById"].record
+                return response.data["update" + model + "ById"].record
             }).catch(() => {
                 swal({
                     title: "Error",
@@ -88,8 +88,8 @@ export default {
         async deleteMutation(model, id) {
             return await this.$apollo.mutate({
                 mutation: gql`
-                    mutation ${model}RemoveById($id: MongoID!) {
-                        ${model}RemoveById(
+                    mutation remove${model}ById($id: MongoID!) {
+                        remove${model}ById(
                             _id: $id
                         ) {
                             record {
@@ -102,7 +102,8 @@ export default {
                     id: id
                 },
             }).then(response => {
-                return response.data[model+"RemoveById"].record
+                // return response.data[model+"RemoveById"].record
+                return true
             }).catch(() => {
                 swal({
                     title: "Error",

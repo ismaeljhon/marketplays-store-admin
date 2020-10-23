@@ -16,7 +16,7 @@
                     <v-divider class="my-2"></v-divider>
                 </v-col>
                 <v-col cols="6">
-                    <v-btn v-if="hasSelectedItems && false" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)">
+                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)">
                         <v-icon left>close</v-icon> Delete Selected
                     </v-btn>
                     <v-spacer v-else></v-spacer>
@@ -135,16 +135,19 @@ export default {
             })
             .then(async (willDelete) => {
                 if (willDelete) {
-                    
-                    this.deleteMutation("Department", items._id).then(data => {
+
+                    const result = await this.deleteMutation("Department", items._id)
+
+                    if (result) {
                         swal({
                             title: "Success",
                             icon: "success",
                             text: "Department(s) has been successfully deleted",
                         })
-
                         this.$apollo.queries.departments.refetch()
-                    })
+                    } else {
+                        
+                    }
                 }
             });
         },
