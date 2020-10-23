@@ -16,7 +16,7 @@
                     <v-divider class="my-2"></v-divider>
                 </v-col>
                 <v-col cols="6">
-                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)">
+                    <v-btn v-if="hasSelectedItems && false" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)">
                         <v-icon left>close</v-icon> Delete Selected
                     </v-btn>
                     <v-spacer v-else></v-spacer>
@@ -89,7 +89,7 @@ export default {
         departments: {
             query: gql`
                 query {
-                    DepartmentMany {
+                    departments {
                         _id,
                         name,
                         code,
@@ -104,8 +104,8 @@ export default {
                 }
             `,
             update(data) {
-                _forEach(data.DepartmentMany, o => { o.is_selected = false })
-                return data.DepartmentMany
+                _forEach(data.departments, o => { o.is_selected = false })
+                return data.departments
             }
         }
     },
@@ -144,8 +144,6 @@ export default {
                         })
 
                         this.$apollo.queries.departments.refetch()
-                    }).catch(error => {
-                        console.log(error)
                     })
                 }
             });
