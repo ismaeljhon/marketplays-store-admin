@@ -82,13 +82,13 @@
                                     <v-col cols="6">
                                         <h3 class="mb-2">SEO</h3>
                                         <v-divider class="mb-5"></v-divider>
-                                        <v-text-field v-model="form.seo_title">
+                                        <v-text-field v-model="form.seoTitle">
                                             <template slot="label">
                                                 SEO Title <small>(optional)</small>
                                             </template>
                                         </v-text-field>
                                         <v-text-field
-                                            v-model="form.seo_keywords"
+                                            v-model="form.seoKeywords"
                                             label="SEO Keywords"
                                             hint="Enter keywords related to your product."
                                             persistent-hint
@@ -99,7 +99,7 @@
                                             </template>
                                         </v-text-field>
                                         <v-textarea 
-                                            v-model="form.seo_description"
+                                            v-model="form.seoDescription"
                                             hint="Type a description that summarizes your product.."
                                             persistent-hint
                                         >
@@ -128,24 +128,23 @@ import Users from '@/assets/sample-data/users'
 
 export default {
     name: 'department-form-modal',
-    data() {
-        return {
-            dialog: false,
-            isCreate: true,
-            form: {
-                name: null,
-                code: null,
-                description: null,
-                slug: null,
-                pricing: null,
-                seo_title: null,
-                seo_keywords: null,
-                seo_description: null,
-                user_team_lead_id: null,
-            },
-            users: Users,
-        }
-    },
+    data: () => ({
+        dialog: false,
+        isCreate: true,
+        form: {
+            name: null,
+            code: null,
+            description: null,
+            slug: null,
+            pricing: null,
+            seoTitle: null,
+            seoKeywords: null,
+            seoDescription: null,
+            user_team_lead_id: null,
+        },
+        users: Users,
+        item: null,
+    }),
     methods: {
         show(item = {}, isCreate = true) {
             _assign(this, {
@@ -163,24 +162,39 @@ export default {
                     description: null,
                     slug: null,
                     pricing: null,
-                    seo_title: null,
-                    seo_keywords: null,
-                    seo_description: null,
+                    seoTitle: null,
+                    seoKeywords: null,
+                    seoDescription: null,
                     user_team_lead_id: null,
                 },
                 isCreate: true,
-                dialog: false
+                dialog: false,
+                item: null,
             })
             this.$refs.observer.reset()
         },
-        submit() {
-            this.$emit('saved', this.form)
-            this.reset()
-            swal({
-                title: "Success",
-                icon: "success",
-                text: "Department has been successfully saved",
-            })
+        async submit() {
+            let allowedFields = ["name", "code", "description", "slug", "pricing", "seoTitle", "seoKeywords", "seoDescription"]
+            this.form.pricing = parseFloat(this.form.pricing)
+
+            let allowedItems = this.getAllowedItems(this.form, allowedFields)
+            
+            let result = null
+            if (this.form._id) {
+                result = await this.updateMutation('Department', allowedItems, this.form._id)
+            } else {
+                result = await this.createMutation('Department', allowedItems)
+            }
+
+            if (result) {
+                this.$emit('saved')
+                this.reset()
+                swal({
+                    title: "Success",
+                    icon: "success",
+                    text: "Department has been successfully saved",
+                })
+            }
         }
     },
     computed: {

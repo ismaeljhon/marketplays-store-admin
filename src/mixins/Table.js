@@ -2,10 +2,21 @@
 *   Reusable table with pagination, sorting, and filter functions
 * */
 import _debounce from 'lodash/debounce'
+import gql from 'graphql-tag'
 
 let TableMixin = {
     created() {
         // this.debounceGetItems()
+    },
+    apollo: {
+        departments: gql`query {
+            DepartmentMany {
+                name,
+                code,
+                description,
+                pricing
+            }
+        }`
     },
     data: function () {
         return {

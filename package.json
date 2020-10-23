@@ -7,13 +7,18 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "apollo-boost": "^0.4.9",
+    "apollo-link": "^1.2.14",
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
+    "graphql": "^15.3.0",
+    "graphql-tag": "^2.11.0",
     "lodash": "^4.17.20",
     "register-service-worker": "^1.7.1",
     "sweetalert": "^2.1.2",
     "vee-validate": "^3.4.0",
     "vue": "^2.6.11",
+    "vue-apollo": "^3.0.5",
     "vue-currency-filter": "^5.2.0",
     "vue-json-csv": "^1.2.11",
     "vue-router": "^3.2.0",

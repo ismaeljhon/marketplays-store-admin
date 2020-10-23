@@ -10,7 +10,7 @@
                         <v-icon left>backup</v-icon>  Export Departments
                     </download-csv>
                     
-                    <department-form-modal ref="deparmentFormModal" @saved="saveItem" />
+                    <department-form-modal ref="deparmentFormModal" @saved="$apollo.queries.departments.refetch()" />
                 </v-col>
                 <v-col cols="12">
                     <v-divider class="my-2"></v-divider>
@@ -32,17 +32,18 @@
             <v-data-table
                 :search="search"
                 :headers="headers"
-                :items="departments"
+                :items="items"
                 :items-per-page="5"
                 v-model="tableItems.selected"
                 show-select
                 @input="afterSelectedEventsOnTableList"
+                item-key="_id"
             >
                 <template slot="item.pricing" slot-scope="row">
                     {{ row.item.pricing | currency }}
                 </template>
                 <template slot="item.user_team_lead_id" slot-scope="row">
-                    {{ get_team_lead_name(row.item.user_team_lead_id) }}
+                    {{ row.item.teamLead.fullName }}
                 </template>
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
@@ -72,8 +73,11 @@ import TableMixin from '@/mixins/Table'
 import _assign from 'lodash/assign'
 import _find from 'lodash/find'
 import _filter from 'lodash/filter'
+import _forEach from 'lodash/forEach'
 import Users from '@/assets/sample-data/users'
 import Departments from '@/assets/sample-data/departments'
+
+import gql from 'graphql-tag'
 
 export default {
     name: 'departments',
@@ -81,23 +85,45 @@ export default {
     components: {
         DepartmentFormModal,
     },
-    data() {
-        return {
-            search: null,
-            headers: [
-                { text: 'ID', align: 'start', value: 'id', width: "70px" },
-                { text: 'Code', align: 'start', value: 'code', width: "100px" },
-                { text: 'Name', align: 'start', value: 'name', },
-                { text: 'Pricing', align: 'start', value: 'pricing' },
-                { text: 'Team Lead', align: 'start', value: 'user_team_lead_id' },
-                { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
-            ],
-            tableItems: {
-                departments: Departments,
-                selected: []
+    apollo: {
+        departments: {
+            query: gql`
+                query {
+                    DepartmentMany {
+                        _id,
+                        name,
+                        code,
+                        description,
+                        pricing,
+                        slug,
+                        teamLead {
+                            _id,
+                            fullName
+                        }
+                    }
+                }
+            `,
+            update(data) {
+                _forEach(data.DepartmentMany, o => { o.is_selected = false })
+                return data.DepartmentMany
             }
         }
     },
+    data: () => ({
+        search: null,
+        headers: [
+            { text: 'Code', align: 'start', value: 'code', width: "100px" },
+            { text: 'Name', align: 'start', value: 'name', },
+            { text: 'Pricing', align: 'start', value: 'pricing' },
+            { text: 'Team Lead', align: 'start', value: 'department_team_lead' },
+            { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
+        ],
+        tableItems: {
+            selected: []
+        },
+        departments: [],
+        model: 'Department'
+    }),
     methods: {
         deleteItems(items) {
             swal({
@@ -107,20 +133,22 @@ export default {
                 buttons: true,
                 dangerMode: true,
             })
-            .then((willDelete) => {
+            .then(async (willDelete) => {
                 if (willDelete) {
-                    this.tableItems.departments = this.cleanCollectionItems(this.tableItems.departments, items)
+                    
+                    this.deleteMutation("Department", items._id).then(data => {
+                        swal({
+                            title: "Success",
+                            icon: "success",
+                            text: "Department(s) has been successfully deleted",
+                        })
 
-                    swal({
-                        title: "Success",
-                        icon: "success",
-                        text: "Department(s) has been successfully deleted",
+                        this.$apollo.queries.departments.refetch()
+                    }).catch(error => {
+                        console.log(error)
                     })
                 }
             });
-        },
-        saveItem(item) {
-            this.tableItems.departments = this.updateCollectionItems(this.tableItems.departments, item)
         },
         get_team_lead_name(userId) {
             let user = _find(Users, o => { return o.ownerID == userId })
@@ -131,9 +159,9 @@ export default {
         },
     },
     computed: {
-        departments() {
-            this.tableItems.selected = _filter(this.tableItems.departments, { is_selected: true })
-            return this.tableItems.departments
+        items() {
+            this.tableItems.selected = _filter(this.departments, { is_selected: true })
+            return this.departments
         },
     },
 }

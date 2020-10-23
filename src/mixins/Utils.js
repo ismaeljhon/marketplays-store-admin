@@ -66,6 +66,16 @@ export default {
             })
 
             return currencies
+        },
+        getAllowedItems(item, fields) {
+            let updatedItem = {}
+            _forEach(Object.keys(item), key => {
+                if (fields.indexOf(key) > -1) {
+                    updatedItem[key] = item[key]
+                }
+            })
+
+            return updatedItem
         }
     }
 }

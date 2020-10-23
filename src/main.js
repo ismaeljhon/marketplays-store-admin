@@ -11,6 +11,9 @@ Vue.config.productionTip = false
 import UtilMixin from '@/mixins/Utils'
 Vue.mixin(UtilMixin)
 
+import GraphqlMutationsMixin from '@/graphql/mutations'
+Vue.mixin(GraphqlMutationsMixin)
+
 require('@/filters')
 
 import { ValidationProvider, ValidationObserver } from 'vee-validate';
@@ -44,9 +47,22 @@ Vue.use(VueCurrencyFilter, {
 import JsonCSV from 'vue-json-csv'
 Vue.component('downloadCsv', JsonCSV)
 
+/** Vue Apollo Config Here */
+import ApolloClient from 'apollo-boost'
+const apolloClient = new ApolloClient({
+  // You should use an absolute URL here
+  uri: process.env.VUE_APP_GRAPHQL_URL
+})
+import VueApollo from 'vue-apollo'
+const apolloProvider = new VueApollo({
+  defaultClient: apolloClient,
+})
+Vue.use(VueApollo)
+
 new Vue({
   router,
   store,
+  apolloProvider,
   vuetify,
   render: h => h(App)
 }).$mount('#app')
