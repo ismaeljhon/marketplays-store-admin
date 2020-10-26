@@ -73,7 +73,7 @@ export default {
                             _id: $id
                         ) {
                             record {
-                                name   
+                                _id   
                             }
                         }
                     }
