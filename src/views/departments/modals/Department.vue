@@ -28,7 +28,7 @@
                                         <h3 class="mb-2">General Information</h3>
                                         <v-divider class="mb-5"></v-divider>
                                         <v-autocomplete
-                                            v-model="form.user_team_lead_id"
+                                            v-model="department.teamLead._id"
                                             :items="users"
                                             hide-no-data
                                             item-text="ownerName"
@@ -41,21 +41,21 @@
                                         </v-autocomplete>
                                         <ValidationProvider v-slot="{ errors }" name="Code" :rules="'required'">
                                             <v-text-field
-                                                v-model="form.code"
+                                                v-model="department.code"
                                                 :error-messages="errors"
                                                 label="Code"
                                             ></v-text-field>
                                         </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Name" :rules="'required'">
                                             <v-text-field
-                                                v-model="form.name"
+                                                v-model="department.name"
                                                 :error-messages="errors"
                                                 label="Name"
                                             ></v-text-field>
                                         </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Slug" :rules="'required'">
                                             <v-text-field
-                                                v-model="form.slug"
+                                                v-model="department.slug"
                                                 :error-messages="errors"
                                                 label="Url"
                                                 hint="This would be used for pretty url"
@@ -66,13 +66,13 @@
                                         <ValidationProvider v-slot="{ errors }" name="Pricing" :rules="'required|numeric'">
                                             <v-text-field
                                                 type="number"
-                                                v-model="form.pricing"
+                                                v-model="department.pricing"
                                                 :error-messages="errors"
                                                 label="Pricing"
                                             ></v-text-field>
                                         </ValidationProvider>
                                         <v-textarea 
-                                            v-model="form.description" 
+                                            v-model="department.description" 
                                             label="Description">
                                             <template slot="label">
                                                 Description <small>(optional)</small>
@@ -82,13 +82,13 @@
                                     <v-col cols="6">
                                         <h3 class="mb-2">SEO</h3>
                                         <v-divider class="mb-5"></v-divider>
-                                        <v-text-field v-model="form.seoTitle">
+                                        <v-text-field v-model="department.seoTitle">
                                             <template slot="label">
                                                 SEO Title <small>(optional)</small>
                                             </template>
                                         </v-text-field>
                                         <v-text-field
-                                            v-model="form.seoKeywords"
+                                            v-model="department.seoKeywords"
                                             label="SEO Keywords"
                                             hint="Enter keywords related to your product."
                                             persistent-hint
@@ -99,7 +99,7 @@
                                             </template>
                                         </v-text-field>
                                         <v-textarea 
-                                            v-model="form.seoDescription"
+                                            v-model="department.seoDescription"
                                             hint="Type a description that summarizes your product.."
                                             persistent-hint
                                         >
@@ -129,59 +129,82 @@ import gql from 'graphql-tag'
 
 export default {
     name: 'department-form-modal',
-    data: () => ({
-        dialog: false,
-        isCreate: true,
-        form: {
-            name: null,
-            code: null,
-            description: null,
-            slug: null,
-            pricing: null,
-            seoTitle: null,
-            seoKeywords: null,
-            seoDescription: null,
-            user_team_lead_id: null,
-        },
-        users: Users,
-        item: null,
-    }),
-    methods: {
-        async show(id, isCreate = true) {
-            await this.$apollo.addSmartQuery('item', {
-                query: gql`
-                    query department($id: MongoID!) {
-                        department(
-                            _id: $id
-                        ) {
+    apollo: {
+        department: {
+            query: gql`
+                query department ($id: MongoID!) {
+                    department(
+                        _id: $id
+                    ) {
+                        _id,
+                        name,
+                        code,
+                        description,
+                        pricing,
+                        seoTitle,
+                        seoDescription,
+                        seoKeywords,
+                        teamLead {
                             _id,
-                            name,
-                            code,
-                            description,
-                            pricing,
-                            slug,
-                            teamLead {
-                                _id,
-                                fullName
-                            }
+                            email
+                            fullName
                         }
                     }
-                `,
-                variables: () => ({
-                    id: id
-                }),
-                update: data => data.department
-            })
+                }
+            `,
+            variables() {
+                return {
+                    id: this.id
+                }
+            },
+            update(data) {
+                return data.department
+            },
+            skip () {
+                return true
+            }
+        }
+        
+    },
+    data() {
+        return {
+            dialog: false,
+            isCreate: true,
+            id: null,
+            department: {
+                name: null,
+                code: null,
+                description: null,
+                slug: null,
+                pricing: null,
+                seoTitle: null,
+                seoKeywords: null,
+                seoDescription: null,
+                teamLead: {
+                    _id: null,
+                    fullName: null,
+                    email: null
+                },
+            },
+            users: Users,
+        } 
+    },
+    methods: {
+        async show(id, isCreate = true) {
+            this.id = id
+            await this.$apollo.queries.department.start()
 
             _assign(this, {
-                form: JSON.parse(JSON.stringify(this.item)),
                 isCreate: isCreate,
                 dialog: true
             })
         },
         reset() {
+            this.$apollo.queries.department.stop()
+            
             _assign(this, {
-                form: {
+                id: null,
+                department: {
                     name: null,
                     code: null,
                     description: null,
@@ -190,7 +213,11 @@ export default {
                     seoTitle: null,
                     seoKeywords: null,
                     seoDescription: null,
-                    user_team_lead_id: null,
+                    teamLead: {
+                        _id: null,
+                        fullName: null,
+                        email: null
+                    },
                 },
                 isCreate: true,
                 dialog: false,
@@ -202,13 +229,13 @@ export default {
         },
         async submit() {
             let allowedFields = ["name", "code", "description", "slug", "pricing", "seoTitle", "seoKeywords", "seoDescription"]
-            this.form.pricing = parseFloat(this.form.pricing)
+            this.department.pricing = parseFloat(this.department.pricing)
 
-            let allowedItems = this.getAllowedItems(this.form, allowedFields)
+            let allowedItems = this.getAllowedItems(this.department, allowedFields)
             
             let result = null
-            if (this.form._id) {
-                result = await this.updateMutation('Department', allowedItems, this.form._id)
+            if (this.department._id) {
+                result = await this.updateMutation('Department', allowedItems, this.department._id)
             } else {
                 result = await this.createMutation('Department', allowedItems)
             }
@@ -227,7 +254,7 @@ export default {
     computed: {
         title() {
             return this.isCreate ? "Adding New Department" : "Department"
-        }
+        },
     }
 }
 </script>
