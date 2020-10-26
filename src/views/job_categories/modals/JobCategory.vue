@@ -29,14 +29,14 @@
                                         <v-divider class="mb-5"></v-divider>
                                         <ValidationProvider v-slot="{ errors }" name="Name" :rules="'required'">
                                             <v-text-field
-                                                v-model="form.name"
+                                                v-model="jobCategory.name"
                                                 :error-messages="errors"
                                                 label="Name"
                                             ></v-text-field>
                                         </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Slug" :rules="'required'">
                                             <v-text-field
-                                                v-model="form.slug"
+                                                v-model="jobCategory.slug"
                                                 :error-messages="errors"
                                                 label="Url"
                                                 hint="This would be used for pretty url"
@@ -48,13 +48,13 @@
                                     <v-col cols="6">
                                         <h3 class="mb-2">SEO</h3>
                                         <v-divider class="mb-5"></v-divider>
-                                        <v-text-field v-model="form.seo_title">
+                                        <v-text-field v-model="jobCategory.seoTitle">
                                             <template slot="label">
                                                 SEO Title <small>(optional)</small>
                                             </template>
                                         </v-text-field>
                                         <v-text-field
-                                            v-model="form.seo_keywords"
+                                            v-model="jobCategory.seoKeywords"
                                             label="SEO Keywords"
                                             hint="Enter keywords related to your product."
                                             persistent-hint
@@ -65,7 +65,7 @@
                                             </template>
                                         </v-text-field>
                                         <v-textarea 
-                                            v-model="form.seo_description"
+                                            v-model="jobCategory.seoDescription"
                                             hint="Type a description that summarizes your product.."
                                             persistent-hint
                                         >
@@ -90,63 +90,99 @@
 </template>
 <script>
 import _assign from 'lodash/assign'
-import Users from '@/assets/sample-data/users'
+import gql from 'graphql-tag'
 
 export default {
-    name: 'department-form-modal',
+    name: 'job-category-form-modal',
+    apollo: {
+        jobCategory: {
+            query: gql`
+                query jobCategory ($id: MongoID!) {
+                    jobCategory (
+                        _id: $id
+                    ) {
+                        _id,
+                        name,
+                        slug,
+                        seoTitle,
+                        seoKeywords,
+                        seoDescription,
+                    }
+                }
+            `,
+            variables() {
+                return {
+                    id: this.id
+                }
+            },
+            update(data) {
+                return data.jobCategory
+            },
+            skip () {
+                return true
+            }
+        },
+    },
     data() {
         return {
             dialog: false,
             isCreate: true,
-            form: {
+            jobCategory: {
                 name: null,
-                code: null,
-                description: null,
                 slug: null,
-                pricing: null,
-                seo_title: null,
-                seo_keywords: null,
-                seo_description: null,
-                user_team_lead_id: null,
+                seoTitle: null,
+                seoKeywords: null,
+                seoDescription: null,
             },
-            users: Users,
         }
     },
     methods: {
-        show(item = {}, isCreate = true) {
+        async show(id, isCreate = true) {
+            this.id = id
+            await this.$apollo.queries.jobCategory.start()
+
             _assign(this, {
-                item: item,
-                form: JSON.parse(JSON.stringify(item)),
                 isCreate: isCreate,
                 dialog: true
             })
         },
         reset() {
+            this.$apollo.queries.jobCategory.stop()
+
             _assign(this, {
-                form: {
+                jobCategory: {
                     name: null,
-                    code: null,
-                    description: null,
                     slug: null,
-                    pricing: null,
-                    seo_title: null,
-                    seo_keywords: null,
-                    seo_description: null,
-                    user_team_lead_id: null,
+                    seoTitle: null,
+                    seoKeywords: null,
+                    seoDescription: null,
                 },
                 isCreate: true,
                 dialog: false
             })
             this.$refs.observer.reset()
         },
-        submit() {
-            this.$emit('saved', this.form)
-            this.reset()
-            swal({
-                title: "Success",
-                icon: "success",
-                text: "Department has been successfully saved",
-            })
+        async submit() {
+            let allowedFields = ["name", "slug", "seoTitle", "seoKeywords", "seoDescription"]
+
+            let allowedItems = this.getAllowedItems(this.jobCategory, allowedFields)
+            
+            let result = null
+            if (this.jobCategory._id) {
+                result = await this.updateMutation('JobCategory', allowedItems, this.jobCategory._id)
+            } else {
+                result = await this.createMutation('JobCategory', allowedItems)
+            }
+
+            if (result) {
+                this.$emit('saved')
+                this.reset()
+                swal({
+                    title: "Success",
+                    icon: "success",
+                    text: "Job Category has been successfully saved",
+                })
+            }
         }
     },
     computed: {

@@ -9,7 +9,7 @@
                     <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="jobCategories" style="cursor: pointer">
                         <v-icon left>backup</v-icon>  Export Job Categories
                     </download-csv>
-                    <job-category-form-modal ref="jobCategoryFormModal" @saved="saveItem" />
+                    <job-category-form-modal ref="jobCategoryFormModal" @saved="$apollo.queries.jobCategories.refetch()" />
                 </v-col>
                 <v-col cols="12">
                     <v-divider class="my-2"></v-divider>
@@ -39,7 +39,7 @@
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.jobCategoryFormModal.show(row.item, false)">
+                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.jobCategoryFormModal.show(row.item._id, false)">
                                 <v-icon>edit</v-icon>
                             </v-btn>
                         </template>
@@ -62,11 +62,28 @@
 import JobCategoryFormModal from '@/views/job_categories/modals/JobCategory'
 import TableMixin from '@/mixins/Table'
 import _filter from 'lodash/filter'
-import JobCategories from '@/assets/sample-data/job_categories'
+import _forEach from 'lodash/forEach'
+import gql from 'graphql-tag'
 
 export default {
     name: 'job-categories',
     mixins: [TableMixin],
+    apollo: {
+        jobCategories: {
+            query: gql`
+                query {
+                    jobCategories {
+                        _id,
+                        name
+                    }
+                }
+            `,
+            update(data) {
+                _forEach(data.jobCategories, o => { o.is_selected = false })
+                return data.jobCategories
+            }
+        }
+    },
     components: {
         JobCategoryFormModal,
     },
@@ -74,18 +91,17 @@ export default {
         return {
             search: null,
             headers: [
-                { text: 'ID', align: 'start', value: 'id', width: "70px" },
-                { text: 'Name', align: 'start', value: 'name', },
+                { text: 'Category Name', align: 'start', value: 'name', },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],
             tableItems: {
-                jobCategories: JobCategories,
                 selected: []
             },
+            jobCategories: []
         }
     },
     methods: {
-        deleteItems(item) {
+        deleteItems(items) {
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to recover this one",
@@ -93,29 +109,25 @@ export default {
                 buttons: true,
                 dangerMode: true,
             })
-            .then((willDelete) => {
+            .then(async (willDelete) => {
                 if (willDelete) {
-                    this.tableItems.jobCategories = this.cleanCollectionItems(this.tableItems.jobCategories, item)
+                    const result = await this.deleteMutation("JobCategory", items._id)
 
-                    swal({
-                        title: "Success",
-                        icon: "success",
-                        text: "Job category deleted",
-                    })
+                    if (result) {
+                        swal({
+                            title: "Success",
+                            icon: "success",
+                            text: "Job Category(s) has been successfully deleted",
+                        })
+                        this.$apollo.queries.jobCategories.refetch()
+                    } else {
+
+                    }
                 }
             });
         },
-        saveItem(item) {
-            this.tableItems.jobCategories = this.updateCollectionItems(this.tableItems.jobCategories, item)
-        },
         afterSelectedEventsOnTableList(items) {
             this.tableItems.selected = items
-        },
-    },
-    computed: {
-        jobCategories() {
-            this.tableItems.selected = _filter(this.tableItems.jobCategories, { is_selected: true })
-            return this.tableItems.jobCategories
         },
     },
 }
