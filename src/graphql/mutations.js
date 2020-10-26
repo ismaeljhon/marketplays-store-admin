@@ -18,16 +18,6 @@ export default {
                         ){
                             record {
                                 _id
-                                name
-                                code
-                                description
-                                slug
-                                pricing
-                                teamLead {
-                                    _id
-                                    fullName
-                                    email
-                                }
                             }
                         }
                     }
@@ -56,16 +46,6 @@ export default {
                         ){
                             record {
                                 _id
-                                name
-                                code
-                                description
-                                slug
-                                pricing
-                                teamLead {
-                                    _id
-                                    fullName
-                                    email
-                                }
                             }
                         }
                     }
