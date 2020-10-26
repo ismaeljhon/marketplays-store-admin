@@ -42,7 +42,7 @@
                 <template slot="item.pricing" slot-scope="row">
                     {{ row.item.pricing | currency }}
                 </template>
-                <template slot="item.user_team_lead_id" slot-scope="row">
+                <template slot="item.teamLead" slot-scope="row">
                     {{ row.item.teamLead.fullName }}
                 </template>
                 <template slot="item.action" slot-scope="row">
@@ -74,8 +74,6 @@ import _assign from 'lodash/assign'
 import _find from 'lodash/find'
 import _filter from 'lodash/filter'
 import _forEach from 'lodash/forEach'
-import Users from '@/assets/sample-data/users'
-import Departments from '@/assets/sample-data/departments'
 
 import gql from 'graphql-tag'
 
@@ -115,7 +113,7 @@ export default {
             { text: 'Code', align: 'start', value: 'code', width: "100px" },
             { text: 'Name', align: 'start', value: 'name', },
             { text: 'Pricing', align: 'start', value: 'pricing' },
-            { text: 'Team Lead', align: 'start', value: 'department_team_lead' },
+            { text: 'Team Lead', align: 'start', value: 'teamLead' },
             { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
         ],
         tableItems: {
