@@ -28,11 +28,11 @@
                                         <h3 class="mb-2">General Information</h3>
                                         <v-divider class="mb-5"></v-divider>
                                         <v-autocomplete
-                                            v-model="department.teamLead._id"
+                                            v-model="department.teamLead"
                                             :items="users"
                                             hide-no-data
-                                            item-text="ownerName"
-                                            item-value="ownerID"
+                                            item-text="fullName"
+                                            item-value="_id"
                                             placeholder="Select Team Lead from the users"
                                         >
                                             <template slot="label">
@@ -139,6 +139,7 @@ export default {
                         _id,
                         name,
                         code,
+                        slug,
                         description,
                         pricing,
                         seoTitle,
@@ -163,8 +164,20 @@ export default {
             skip () {
                 return true
             }
+        },
+        users: {
+            query: gql`
+                query {
+                    users {
+                        _id
+                        fullName
+                    }
+                }
+            `,
+            update(data) {
+                return data.users
+            },
         }
-        
     },
     data() {
         return {
@@ -186,7 +199,6 @@ export default {
                     email: null
                 },
             },
-            users: Users,
         } 
     },
     methods: {
@@ -228,7 +240,7 @@ export default {
             this.$refs.observer.reset()
         },
         async submit() {
-            let allowedFields = ["name", "code", "description", "slug", "pricing", "seoTitle", "seoKeywords", "seoDescription"]
+            let allowedFields = ["name", "code", "description", "slug", "pricing", "seoTitle", "seoKeywords", "seoDescription", "teamLead"]
             this.department.pricing = parseFloat(this.department.pricing)
 
             let allowedItems = this.getAllowedItems(this.department, allowedFields)
