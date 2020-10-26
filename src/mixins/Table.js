@@ -8,16 +8,6 @@ let TableMixin = {
     created() {
         // this.debounceGetItems()
     },
-    apollo: {
-        departments: gql`query {
-            DepartmentMany {
-                name,
-                code,
-                description,
-                pricing
-            }
-        }`
-    },
     data: function () {
         return {
             tableItemsRoute: process.env.VUE_APP_URL, /* Route in for getting items from the api */
