@@ -9,6 +9,7 @@
             show-select
             @input="$emit('selected', selectedItems)"
             @dblclick:row="emitEdit"
+            item-key="_id"
         >
             <template slot="item.pricing" slot-scope="row">
                 {{ row.item.pricing | currency }}
@@ -17,7 +18,7 @@
             <template slot="item.action" slot-scope="row">
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$emit('edit', row.item)">
+                        <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$emit('edit', row.item._id)">
                             <v-icon>edit</v-icon>
                         </v-btn>
                     </template>
@@ -56,7 +57,6 @@ export default {
     data() {
         return {
             headers: [
-                { text: 'ID', align: 'start', value: 'id', width: "70px" },
                 { text: 'Name', align: 'start', value: 'name', width: "200px"},
                 { text: 'Pricing', align: 'start', value: 'pricing', width: "120px" },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },

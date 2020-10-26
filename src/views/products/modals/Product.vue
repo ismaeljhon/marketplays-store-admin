@@ -31,14 +31,14 @@
                                     <v-col cols="6">
                                         <ValidationProvider v-slot="{ errors }" name="Name" :rules="'required'">
                                             <v-text-field
-                                                v-model="form.name"
+                                                v-model="product.name"
                                                 :error-messages="errors"
                                                 label="Name"
                                             ></v-text-field>
                                         </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Slug" :rules="'required'">
                                             <v-text-field
-                                                v-model="form.slug"
+                                                v-model="product.slug"
                                                 :error-messages="errors"
                                                 label="Url"
                                                 hint="This would be used for pretty url"
@@ -49,37 +49,34 @@
                                         <ValidationProvider v-slot="{ errors }" name="Workforce Threshold" :rules="'required|numeric'">
                                             <v-text-field
                                                 type="number"
-                                                v-model="form.workforce_threshold"
+                                                v-model="product.workforceThreshold"
                                                 :error-messages="errors"
                                                 label="Workforce Threshold"
                                             ></v-text-field>
                                         </ValidationProvider>
-                                        <v-text-field v-model="form.short_description">
+                                        <v-text-field v-model="product.shortDescription">
                                             <template slot="label">
                                                 Short Description <small>(optional)</small>
                                             </template>
                                         </v-text-field>
                                     </v-col>
                                     <v-col cols="6">
-                                        <ValidationProvider v-slot="{ errors }" name="Department" :rules="'required'">
-                                            <v-autocomplete
-                                                v-model="form.department_id"
-                                                :items="departments"
-                                                hide-no-data
-                                                item-text="name"
-                                                item-value="id"
-                                                label="Department"
-                                                placeholder="Select Department"
-                                                :error-messages="errors"
-                                            ></v-autocomplete>
-                                        </ValidationProvider>
+                                        <v-autocomplete
+                                            v-model="product.department"
+                                            :items="departments"
+                                            hide-no-data
+                                            item-text="name"
+                                            item-value="id"
+                                            label="Department"
+                                            placeholder="Select Department"
+                                        ></v-autocomplete>
                                         <ValidationProvider v-slot="{ errors }" name="Product Manager" :rules="'required'">
                                             <v-autocomplete
-                                                v-model="form.user_project_manager_id"
+                                                v-model="product.projectManager"
                                                 :items="users"
                                                 hide-no-data
-                                                item-text="ownerName"
-                                                item-value="ownerID"
+                                                item-text="fullName"
+                                                item-value="_id"
                                                 label="Product Manager"
                                                 placeholder="Select Team Product Manager from the users"
                                                 :error-messages="errors"
@@ -88,13 +85,13 @@
                                         <ValidationProvider v-slot="{ errors }" name="Pricing" :rules="'required|numeric'">
                                             <v-text-field
                                                 type="number"
-                                                v-model="form.pricing"
+                                                v-model="product.pricing"
                                                 :error-messages="errors"
                                                 label="Pricing"
                                             ></v-text-field>
                                         </ValidationProvider>
                                         <v-autocomplete 
-                                            v-model="form.tags" 
+                                            v-model="product.tags" 
                                             :items="tags" 
                                             @keydown="processTagsInput"
                                             multiple
@@ -113,7 +110,7 @@
                                     </v-col>
                                     <v-col cols="12">
                                         <p class="my-2">Description <small>(optional)</small></p>
-                                        <vue-editor v-model="form.description"></vue-editor>
+                                        <vue-editor v-model="product.description"></vue-editor>
                                     </v-col>
 
                                     <v-col cols="12" class="mt-5">
@@ -121,7 +118,7 @@
                                         <v-divider></v-divider>
                                     </v-col>
                                     <v-col cols="6">
-                                        <v-text-field v-model="form.seo_title">
+                                        <v-text-field v-model="product.seoTitle">
                                             <template slot="label">
                                                 SEO Title <small>(optional)</small>
                                             </template>
@@ -129,7 +126,7 @@
                                     </v-col>
                                     <v-col cols="6">
                                         <v-text-field
-                                            v-model="form.seo_keywords"
+                                            v-model="product.seoKeywords"
                                             label="SEO Keywords"
                                             hint="Enter keywords related to your product."
                                             persistent-hint
@@ -142,7 +139,7 @@
                                     </v-col>
                                     <v-col cols="12">
                                         <v-textarea 
-                                            v-model="form.seo_description"
+                                            v-model="product.seoDescription"
                                             hint="Type a description that summarizes your product.."
                                             persistent-hint
                                             class="mb-5"
@@ -169,82 +166,161 @@
 </template>
 <script>
 import _assign from 'lodash/assign'
-import Users from '@/assets/sample-data/users'
-import Departments from '@/assets/sample-data/departments'
 import { VueEditor } from "vue2-editor";
+import gql from 'graphql-tag'
 
 export default {
     name: 'product-form-modal',
     components: {
         VueEditor
     },
+    apollo: {
+        product: {
+            query: gql`
+                query product ($id: MongoID!) {
+                    service (
+                        _id: $id
+                    ) {
+                        _id,
+                        name,
+                        description,
+                        shortDescription,
+                        pricing,
+                        tags,
+                        slug,
+                        workforceThreshold,
+                        seoTitle,
+                        seoKeywords,
+                        seoDescription,
+                        projectManager,
+                    }
+                }
+            `,
+            variables() {
+                return {
+                    id: this.id
+                }
+            },
+            update(data) {
+                return data.service
+            },
+            skip () {
+                return true
+            }
+        },
+        users: {
+            query: gql`
+                query {
+                    users {
+                        _id
+                        fullName
+                    }
+                }
+            `,
+            update(data) {
+                return data.users
+            },
+        },
+        departments: {
+            query: gql`
+                query {
+                    departments {
+                        _id,
+                        name,
+                    }
+                }
+            `,
+            update(data) {
+                return data.departments
+            }
+        }
+    },
     data() {
         return {
+            id: null,
             dialog: false,
             isCreate: true,
-            form: {
+            product: {
                 name: null,
                 description: null,
-                short_description: null,
+                shortDescription: null,
                 pricing: null,
                 tags: [],
                 slug: null,
-                workforce_threshold: null,
-                seo_title: null,
-                seo_keywords: null,
-                seo_description: null,
-                user_project_manager_id: null,
+                workforceThreshold: null,
+                seoTitle: null,
+                seoKeywords: null,
+                seoDescription: null,
+                projectManager: null,
+                department: null,
             },
-            users: Users,
-            departments: Departments,
             tags: ["seo", "web", "web development", "web design", "graphics"],
             tagDelimiter: ",",
             searchInput: null,
         }
     },
     methods: {
-        show(item = {}, isCreate = true) {
+        async show(id, isCreate = true) {
+            this.id = id
+            await this.$apollo.queries.product.start()
+
             _assign(this, {
-                item: item,
-                form: JSON.parse(JSON.stringify(item)),
                 isCreate: isCreate,
                 dialog: true
             })
         },
         reset() {
+            this.$apollo.queries.product.stop()
+
             _assign(this, {
-                form: {
+                product: {
                     name: null,
                     description: null,
-                    short_description: null,
+                    shortDescription: null,
                     pricing: null,
                     tags: [],
                     slug: null,
-                    workforce_threshold: null,
-                    seo_title: null,
-                    seo_keywords: null,
-                    seo_description: null,
-                    user_project_manager_id: null,
+                    workforceThreshold: null,
+                    seoTitle: null,
+                    seoKeywords: null,
+                    seoDescription: null,
+                    projectManager: null,
+                    department: null,
                 },
                 isCreate: true,
                 dialog: false,
             })
             this.$refs.observer.reset()
         },
-        submit() {
-            this.$emit('saved', this.form)
-            this.reset()
-            swal({
-                title: "Success",
-                icon: "success",
-                text: "Product has been successfully saved",
-            })
+        async submit() {
+            let allowedFields = ["name", "description", "shortDescription", "pricing", "tags", "slug", "workforceThreshold", "seoTitle", "seoKeywords", "seoDescription", "projectManager"]
+            this.product.pricing = parseFloat(this.product.pricing)
+            this.product.workforceThreshold = parseFloat(this.product.workforceThreshold)
+
+            let allowedItems = this.getAllowedItems(this.product, allowedFields)
+            
+            let result = null
+            if (this.product._id) {
+                result = await this.updateMutation('Service', allowedItems, this.product._id)
+            } else {
+                result = await this.createMutation('Service', allowedItems)
+            }
+
+            if (result) {
+                this.$emit('saved')
+                this.reset()
+                swal({
+                    title: "Success",
+                    icon: "success",
+                    text: "Product/Service has been successfully saved",
+                })
+            }
         },
         processTagsInput(element) {
             let newValue = element.target.value.replaceAll(this.tagDelimiter, "")
 
-            if (newValue != "" && element.key == this.tagDelimiter && this.form.tags.indexOf(newValue) < 0) {
-                this.form.tags.push(newValue)
+            if (newValue != "" && element.key == this.tagDelimiter && this.product.tags.indexOf(newValue) < 0) {
+                this.product.tags.push(newValue)
                 this.tags.push(newValue)
             }
 
@@ -259,7 +335,7 @@ export default {
         }
     },
     watch: {
-        "form.tags"() {
+        "product.tags"() {
             this.searchInput = null
         }
     }

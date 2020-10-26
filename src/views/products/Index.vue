@@ -9,7 +9,7 @@
                     <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="products" style="cursor: pointer">
                         <v-icon left>backup</v-icon>  Export Products
                     </download-csv>
-                    <product-form-modal ref="productFormModal" @saved="saveItem" />
+                    <product-form-modal ref="productFormModal" @saved="$apollo.queries.products.refetch()" />
                 </v-col>
                 <v-col cols="12">
                     <v-divider class="my-2"></v-divider>
@@ -62,13 +62,32 @@ import ProductFormModal from '@/views/products/modals/Product'
 import ProductTableList from '@/views/products/components/ProductTableList'
 import ProductGridView from '@/views/products/components/ProductGridView'
 import TableMixin from '@/mixins/Table'
+import _forEach from 'lodash/forEach'
 import _filter from 'lodash/filter'
 import _map from 'lodash/map'
 import Products from '@/assets/sample-data/products'
+import gql from 'graphql-tag'
 
 export default {
     name: 'products',
     mixins: [TableMixin],
+    apollo: {
+        products: {
+            query: gql`
+                query {
+                    services {
+                        _id,
+                        name,
+                        pricing,
+                    }
+                }
+            `,
+            update(data) {
+                _forEach(data.services, o => { o.is_selected = false })
+                return data.services
+            }
+        }
+    },
     components: {
         ProductFormModal,
         ProductTableList,
@@ -80,10 +99,10 @@ export default {
             selectAll: false,
             search: null,
             tableItems: {
-                products: Products,
                 selected: []
             },
-            selectedItems: []
+            selectedItems: [],
+            products: [],
         }
     },
     methods: {
@@ -98,20 +117,23 @@ export default {
                 buttons: true,
                 dangerMode: true,
             })
-            .then((willDelete) => {
+            .then(async (willDelete) => {
                 if (willDelete) {
-                    this.tableItems.products = this.cleanCollectionItems(this.tableItems.products, items)
 
-                    swal({
-                        title: "Success",
-                        icon: "success",
-                        text: "Product has been successfully deleted",
-                    })
+                    const result = await this.deleteMutation("Service", items._id)
+
+                    if (result) {
+                        swal({
+                            title: "Success",
+                            icon: "success",
+                            text: "Service(s) has been successfully deleted",
+                        })
+                        this.$apollo.queries.products.refetch()
+                    } else {
+
+                    }
                 }
             });
-        },
-        saveItem(item) {
-            this.tableItems.products = this.updateCollectionItems(this.tableItems.products, item)
         },
         afterSelectedEventsOnTableList(items) {
             this.tableItems.selected = items
@@ -120,29 +142,23 @@ export default {
             this.tableItems.products = JSON.parse(JSON.stringify(this.updateCollectionItems(this.tableItems.products, item)))
         }
     },
-    computed: {
-        products() {
-            this.tableItems.selected = _filter(this.tableItems.products, { is_selected: true })
-            return this.tableItems.products
-        },
-    },
     watch: {
         hasSelectedItems(newValue) {
             if (!newValue) 
                 this.selectAll = false
         },
         selectAll(newValue) {
-            this.tableItems.products = _map(this.tableItems.products, o => { 
+            this.products = _map(this.products, o => { 
                 o.is_selected = newValue
                 return o 
             });
         },
         gridOn() {
-            this.tableItems.products = _map(this.tableItems.products, o => { 
+            this.products = _map(this.products, o => { 
                 o.is_selected = false
                 return o 
             });
         }
-    }
+    },
 }
 </script>
