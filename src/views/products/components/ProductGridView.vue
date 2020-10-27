@@ -31,7 +31,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn v-bind="attrs" v-on="on" icon color="primary" @click.prevent="$emit('edit', item._id)">
-                                <v-icon>edit</v-icon>
+                                <v-icon>mdi-square-edit-outline</v-icon>
                             </v-btn>
                         </template>
                         <span>Edit this Product</span>
@@ -39,7 +39,7 @@
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn v-bind="attrs" v-on="on" icon color="error" @click.prevent="$emit('delete', item)">
-                                <v-icon>close</v-icon>
+                                <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </template>
                         <span>Delete Product</span>

@@ -3,11 +3,11 @@
         <v-card-title>
             <v-row dense>
                 <v-col cols="5">
-                    <h3 class="mr-2"><v-icon>work_outline</v-icon> Job Listing</h3>
+                    <h3 class="mr-2"><v-icon left>mdi-format-list-bulleted-type</v-icon>Job Listing</h3>
                 </v-col>
                 <v-col cols="7" class="text-right">
                     <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="jobs" style="cursor: pointer">
-                        <v-icon left>backup</v-icon>  Export Jobs
+                        <v-icon left>mdi-download</v-icon>Export Jobs
                     </download-csv>
                     <job-form-modal ref="jobFormModal" @saved="$apollo.queries.jobs.refetch()" />
                 </v-col>
@@ -16,12 +16,12 @@
                 </v-col>
                 <v-col cols="6">
                     <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)">
-                        <v-icon left>close</v-icon> Delete Selected
+                        <v-icon left>mdi-close</v-icon> Delete Selected
                     </v-btn>
                     <v-spacer v-else></v-spacer>
                 </v-col>
                 <v-col cols="6">
-                    <v-text-field dense filled single-line hide-details v-model="search" append-icon="search" label="Search"></v-text-field>
+                    <v-text-field dense filled single-line hide-details v-model="search" append-icon="mdi-magnify" label="Search"></v-text-field>
                 </v-col>
                     
             </v-row>
@@ -39,8 +39,8 @@
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.jobFormModal.show(row.item._id, false)">
-                                <v-icon>edit</v-icon>
+                            <v-btn small icon v-bind="attrs" v-on="on" color="primary" @click.prevent="$refs.jobFormModal.show(row.item._id, false)">
+                                <v-icon>mdi-square-edit-outline</v-icon>
                             </v-btn>
                         </template>
                         <span>Edit this item</span>
@@ -48,7 +48,7 @@
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="deleteItems(row.item)">
-                                <v-icon>close</v-icon>
+                                <v-icon>mdi-close</v-icon>
                             </v-btn>
                         </template>
                         <span>Delete this item</span>

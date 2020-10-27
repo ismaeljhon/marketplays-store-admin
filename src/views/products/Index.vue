@@ -3,11 +3,11 @@
         <v-card-title>
             <v-row dense>
                 <v-col cols="5">
-                    <h3 class="mr-2"><v-icon left>local_offer</v-icon> Products</h3>
+                    <h3 class="mr-2"><v-icon left>mdi-cogs</v-icon> Products</h3>
                 </v-col>
                 <v-col cols="7" class="text-right">
                     <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="products" style="cursor: pointer">
-                        <v-icon left>backup</v-icon>  Export Products
+                        <v-icon left>mdi-download</v-icon>  Export Products
                     </download-csv>
                     <product-form-modal ref="productFormModal" @saved="$apollo.queries.products.refetch()" />
                 </v-col>
@@ -20,7 +20,7 @@
                             <v-btn v-bind="attrs" v-on="on" tile icon small class="mr-2" color="primary">
                                 <v-tooltip bottom>
                                     <template v-slot:activator="{ on, attrs }">
-                                        <v-icon v-bind="attrs" v-on="on" >{{ gridOn ? 'grid_on' : 'view_list' }}</v-icon>
+                                        <v-icon v-bind="attrs" v-on="on" >mdi-{{ gridOn ? 'view-grid' : 'view-list' }}</v-icon>
                                     </template>
                                     <span>View</span>
                                 </v-tooltip>
@@ -39,7 +39,7 @@
                     <v-tooltip bottom v-if="gridOn">
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn v-bind="attrs" v-on="on" icon small tile class="mr-2" :color="hasSelectedItems ? 'primary' : ''" @click.prevent="selectAll = !selectAll">
-                                <v-icon>playlist_add_check</v-icon>
+                                <v-icon>mdi-playlist-check</v-icon>
                             </v-btn>
                         </template>
                         <span>Select All</span>
@@ -47,7 +47,7 @@
                     <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)"><v-icon left>close</v-icon> Delete Selected</v-btn>
                 </v-col>
                 <v-col cols="6">
-                    <v-text-field dense filled v-model="search" append-icon="search" label="Search" single-line hide-details></v-text-field>
+                    <v-text-field dense filled v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
                 </v-col>
             </v-row>
         </v-card-title>

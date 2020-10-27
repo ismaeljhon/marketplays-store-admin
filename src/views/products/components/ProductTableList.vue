@@ -18,8 +18,8 @@
             <template slot="item.action" slot-scope="row">
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$emit('edit', row.item._id)">
-                            <v-icon>edit</v-icon>
+                        <v-btn small icon v-bind="attrs" v-on="on" color="primary" @click.prevent="$emit('edit', row.item._id)">
+                            <v-icon>mdi-square-edit-outline</v-icon>
                         </v-btn>
                     </template>
                     <span>Edit this item</span>
@@ -27,7 +27,7 @@
                 <v-tooltip top>
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn small icon v-bind="attrs" v-on="on" color="error" @click.prevent="$emit('delete', row.item)">
-                            <v-icon>close</v-icon>
+                            <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </template>
                     <span>Delete this item</span>

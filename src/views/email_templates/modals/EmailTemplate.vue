@@ -2,13 +2,13 @@
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition" persistent>
         <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" tile dark v-bind="attrs" v-on="on" small>
-                <v-icon left>add</v-icon>Add Email Template
+                <v-icon left>mdi-plus</v-icon>Add Email Template
             </v-btn>
         </template>
         <v-card>
             <v-toolbar dark color="primary">
                 <v-btn icon dark @click="reset">
-                    <v-icon>close</v-icon>
+                    <v-icon>mdi-close</v-icon>
                 </v-btn>
                 <v-spacer></v-spacer>
                 <v-toolbar-title>{{ title }}</v-toolbar-title>
@@ -42,7 +42,7 @@
                                 
                                 <div class="mt-2">
                                     <v-btn @click.prevent="reset">cancel</v-btn>
-                                    <v-btn color="primary" type="submit" class="float-right">submit</v-btn>
+                                    <v-btn color="primary" type="submit" class="float-right">save</v-btn>
                                 </div>
                             </form>
                         </ValidationObserver>
