@@ -91,9 +91,7 @@ export default {
                         _id,
                         name,
                         code,
-                        description,
                         pricing,
-                        slug,
                         teamLead {
                             _id,
                             fullName
