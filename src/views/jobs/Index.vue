@@ -9,7 +9,7 @@
                     <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="jobs" style="cursor: pointer">
                         <v-icon left>backup</v-icon>  Export Jobs
                     </download-csv>
-                    <job-form-modal ref="jobFormModal" @saved="saveItem" />
+                    <job-form-modal ref="jobFormModal" @saved="$apollo.queries.jobs.refetch()" />
                 </v-col>
                 <v-col cols="12">
                     <v-divider class="my-2"></v-divider>
@@ -39,7 +39,7 @@
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.jobFormModal.show(row.item, false)">
+                            <v-btn small icon v-bind="attrs" v-on="on" color="info" class="mr-2" @click.prevent="$refs.jobFormModal.show(row.item._id, false)">
                                 <v-icon>edit</v-icon>
                             </v-btn>
                         </template>
@@ -62,10 +62,28 @@
 import JobFormModal from '@/views/jobs/modals/Job'
 import TableMixin from '@/mixins/Table'
 import _filter from 'lodash/filter'
-import Jobs from '@/assets/sample-data/jobs'
+import gql from 'graphql-tag'
+import _forEach from 'lodash/forEach'
 
 export default {
     name: 'jobs',
+    apollo: {
+        jobs: {
+            query: gql`
+                query {
+                    jobs {
+                        _id,
+                        title,
+                        description,
+                    }
+                }
+            `,
+            update(data) {
+                _forEach(data.jobs, o => { o.is_selected = false })
+                return data.jobs
+            }
+        }
+    },
     mixins: [TableMixin],
     components: {
         JobFormModal,
@@ -74,18 +92,18 @@ export default {
         return {
             search: null,
             headers: [
-                { text: 'ID', align: 'start', value: 'id', width: "70px" },
                 { text: 'Title', align: 'start', value: 'title', width: "200px" },
                 { text: 'Description', align: 'start', value: 'description' },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],
             tableItems: {
-                jobs: Jobs,
-            }
+                selected: []
+            },
+            jobs: []
         }
     },
     methods: {
-        deleteItems(item) {
+        deleteItems(items) {
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to recover this one",
@@ -93,29 +111,25 @@ export default {
                 buttons: true,
                 dangerMode: true,
             })
-            .then((willDelete) => {
+            .then(async (willDelete) => {
                 if (willDelete) {
-                    this.tableItems.jobs = this.cleanCollectionItems(this.tableItems.jobs, item)
+                    const result = await this.deleteMutation("Job", items._id)
 
-                    swal({
-                        title: "Success",
-                        icon: "success",
-                        text: "Job deleted",
-                    })
+                    if (result) {
+                        swal({
+                            title: "Success",
+                            icon: "success",
+                            text: "Job(s) has been successfully deleted",
+                        })
+                        this.$apollo.queries.jobs.refetch()
+                    } else {
+
+                    }
                 }
             });
         },
-        saveItem(item) {
-            this.tableItems.jobs = this.updateCollectionItems(this.tableItems.jobs, item)
-        },
         afterSelectedEventsOnTableList(items) {
             this.tableItems.selected = items
-        },
-    },
-    computed: {
-        jobs() {
-            this.tableItems.selected = _filter(this.tableItems.jobs, { is_selected: true })
-            return this.tableItems.jobs
         },
     },
 }

@@ -31,14 +31,14 @@
                                     <v-col cols="6">
                                         <ValidationProvider v-slot="{ errors }" name="Title" :rules="'required'">
                                             <v-text-field
-                                                v-model="form.title"
+                                                v-model="job.title"
                                                 :error-messages="errors"
                                                 label="Title"
                                             ></v-text-field>
                                         </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Slug" :rules="'required'">
                                             <v-text-field
-                                                v-model="form.slug"
+                                                v-model="job.slug"
                                                 :error-messages="errors"
                                                 label="Url"
                                                 hint="This would be used for pretty url"
@@ -51,9 +51,7 @@
                                                 :items="jobTypes"
                                                 label="Job Type"
                                                 :error-messages="errors"
-                                                v-model="form.job_type_id"
-                                                item-text="name"
-                                                item-value="id"
+                                                v-model="job.type"
                                             ></v-select>
                                         </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Category" :rules="'required'">
@@ -61,7 +59,7 @@
                                                 :items="jobCategories"
                                                 label="Category"
                                                 :error-messages="errors"
-                                                v-model="form.job_category_id"
+                                                v-model="job.category"
                                                 item-text="name"
                                                 item-value="id"
                                             ></v-select>
@@ -73,12 +71,12 @@
                                                 :items="canBidItems"
                                                 label="Open for Bid?"
                                                 :error-messages="errors"
-                                                v-model="form.biddable"
+                                                v-model="job.biddable"
                                             ></v-select>
                                         </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Currency" :rules="'required'">
                                             <v-autocomplete
-                                                v-model="form.currency"
+                                                v-model="job.currency"
                                                 :items="currencies"
                                                 item-text="name"
                                                 item-value="code"
@@ -91,18 +89,18 @@
                                         <ValidationProvider v-slot="{ errors }" name="Opening Market Bid Value" :rules="'required|numeric|min_value:1'">
                                             <v-text-field 
                                                 type="number"
-                                                v-model="form.opening_market_bid" 
+                                                v-model="job.openingMarketBid" 
                                                 :error-messages="errors"
                                             >
                                                 <template slot="label">
-                                                    Opening Market Bid <small v-if="form.currency">(in {{ form.currency }})</small>
+                                                    Opening Market Bid <small v-if="job.currency">(in {{ job.currency }})</small>
                                                 </template>
                                             </v-text-field>
                                         </ValidationProvider>
                                         <ValidationProvider v-slot="{ errors }" name="Timeframe" :rules="'required|numeric|min_value:1'">
                                             <v-text-field
                                                 type="number"
-                                                v-model="form.timeframe" 
+                                                v-model="job.timeframe" 
                                                 :error-messages="errors"
                                             >
                                                 <template slot="label">
@@ -114,7 +112,7 @@
                                     <v-col cols="12">
                                         <ValidationProvider v-slot="{ errors }" name="Required Certificates" :rules="'required'">
                                             <v-autocomplete
-                                                v-model="form.required_certificates"
+                                                v-model="job.requiredCertificates"
                                                 :items="requiredCertificates"
                                                 item-text="name"
                                                 item-value="code"
@@ -125,25 +123,25 @@
                                             ></v-autocomplete>
                                         </ValidationProvider> 
                                         <v-textarea 
-                                            v-model="form.description" 
+                                            v-model="job.description" 
                                             label="Description">
                                             <template slot="label">
                                                 Description <small>(optional)</small>
                                             </template>
                                         </v-textarea>
                                         <p class="my-2">Instructions <small>(optional)</small></p>
-                                        <vue-editor v-model="form.instructions"></vue-editor>
+                                        <vue-editor v-model="job.instructions"></vue-editor>
                                     </v-col>
                                     <v-col cols="12">
                                         <h3 class="mb-2">SEO</h3>
                                         <v-divider class="mb-5"></v-divider>
-                                        <v-text-field v-model="form.seo_title">
+                                        <v-text-field v-model="job.seoTitle">
                                             <template slot="label">
                                                 SEO Title <small>(optional)</small>
                                             </template>
                                         </v-text-field>
                                         <v-text-field
-                                            v-model="form.seo_keywords"
+                                            v-model="job.seoKeywords"
                                             label="SEO Keywords"
                                             hint="Enter keywords related to your product."
                                             persistent-hint
@@ -154,7 +152,7 @@
                                             </template>
                                         </v-text-field>
                                         <v-textarea 
-                                            v-model="form.seo_description"
+                                            v-model="job.seoDescription"
                                             hint="Type a description that summarizes your product.."
                                             persistent-hint
                                         >
@@ -184,87 +182,166 @@ import UtilsMixin from '@/mixins/Utils'
 import { VueEditor } from "vue2-editor";
 import RequiredCertificates from '@/assets/sample-data/required_certificates'
 import JobCategories from '@/assets/sample-data/job_categories'
+import gql from 'graphql-tag'
 
 export default {
-    name: 'department-form-modal',
+    name: 'job-form-modal',
     mixins: [UtilsMixin],
+    apollo: {
+        jobCategories: {
+            query: gql`
+                query {
+                    jobCategories {
+                        _id,
+                        name
+                    }
+                }
+            `,
+            update(data) {
+                return data.jobCategories
+            }
+        },
+        users: {
+            query: gql`
+                query {
+                    users {
+                        _id
+                        fullName
+                    }
+                }
+            `,
+            update(data) {
+                return data.users
+            },
+        },
+        job: {
+            query: gql`
+                query jobCategory ($id: MongoID!) {
+                    job (
+                        _id: $id
+                    ) {
+                        _id,
+                        title,
+                        slug,
+                        description,
+                        instructions,
+                        biddable,
+                        openingMarketBid,
+                        type,
+                        timeframe,
+                        seoTitle,
+                        seoKeywords,
+                        seoDescription,
+                        currency,
+                        requiredCertificates,
+                        category,
+                    }
+                }
+            `,
+            variables() {
+                return {
+                    id: this.id
+                }
+            },
+            update(data) {
+                return data.job
+            },
+            skip () {
+                return true
+            }
+        },
+    },
     components: {
         VueEditor
     },
     data() {
         return {
+            id: null,
             dialog: false,
             isCreate: true,
-            form: {
+            job: {
                 title: null,
                 slug: null,
                 description: null,
                 instructions: null,
                 biddable: null,
-                opening_market_bid: null,
-                job_type_id: null,
+                openingMarketBid: null,
+                type: null,
                 timeframe: null, // in minutes
-                seo_title: null,
-                seo_keywords: null,
-                seo_description: null,
+                seoTitle: null,
+                seoKeywords: null,
+                seoDescription: null,
                 currency: null,
-                required_certificates: [],
-                job_category_id: null,
+                requiredCertificates: [],
+                category: null,
             },
-            users: Users,
-            jobCategories: JobCategories,
             currencies: [],
             canBidItems: [
                 { value: true, text: 'Yes' },
                 { value: false, text: 'No' },
             ],
             requiredCertificates: RequiredCertificates,
-            jobTypes: [
-                { id: 1, name: "Project-Based" },
-                { id: 2, name: "Hourly Rate" },
-            ]
+            jobTypes: ["Project-Based", "Hourly Rate"]
         }
     },
     methods: {
-        show(item = {}, isCreate = true) {
+        show(id, isCreate = true) {
+            this.id = id
+
+            this.$apollo.queries.job.start()
             _assign(this, {
-                item: item,
-                form: JSON.parse(JSON.stringify(item)),
                 isCreate: isCreate,
                 dialog: true
             })
         },
         reset() {
+            this.$apollo.queries.job.stop()
             _assign(this, {
-                form: {
+                job: {
                     title: null,
                     slug: null,
                     description: null,
                     instructions: null,
                     biddable: null,
-                    opening_market_bid: null,
-                    job_type_id: null,
+                    openingMarketBid: null,
+                    type: null,
                     timeframe: null, // in minutes
-                    seo_title: null,
-                    seo_keywords: null,
-                    seo_description: null,
+                    seoTitle: null,
+                    seoKeywords: null,
+                    seoDescription: null,
                     currency: null,
-                    required_certificates: [],
-                    job_category_id: null,
+                    requiredCertificates: [],
+                    category: null,
                 },
                 isCreate: true,
                 dialog: false
             })
             this.$refs.observer.reset()
         },
-        submit() {
-            this.$emit('saved', this.form)
-            this.reset()
-            swal({
-                title: "Success",
-                icon: "success",
-                text: "Job has been successfully saved",
-            })
+        async submit() {
+            let allowedFields = ["title", "slug", "description", "instructions", "biddable", "openingMarketBid", "type", "timeframe", "seoTitle", "seoKeywords", "seo_description", "currency", "requiredCertificates", "category"]
+
+            this.job.openingMarketBid = parseFloat(this.job.openingMarketBid)
+            this.job.timeframe = parseFloat(this.job.timeframe)
+
+            let allowedItems = this.getAllowedItems(this.job, allowedFields)
+            
+            let result = null
+            if (this.job._id) {
+                result = await this.updateMutation('Job', allowedItems, this.job._id)
+            } else {
+                result = await this.createMutation('Job', allowedItems)
+            }
+
+            if (result) {
+                this.$emit('saved')
+                this.reset()
+                swal({
+                    title: "Success",
+                    icon: "success",
+                    text: "Job has been successfully saved",
+                })
+            }
         },
     },
     mounted() {
