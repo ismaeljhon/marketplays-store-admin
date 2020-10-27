@@ -32,12 +32,14 @@
             <v-data-table
                 :search="search"
                 :headers="headers"
-                :items="items"
+                :items="departments"
                 :items-per-page="5"
                 v-model="tableItems.selected"
                 show-select
                 @input="afterSelectedEventsOnTableList"
                 item-key="_id"
+                :loading="$apollo.queries.departments.loading"
+                loading-text="Loading please wait..."
             >
                 <template slot="item.pricing" slot-scope="row">
                     {{ row.item.pricing | currency }}

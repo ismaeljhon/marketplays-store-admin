@@ -52,8 +52,13 @@
             </v-row>
         </v-card-title>
         <v-card-text>
-            <product-grid-view v-if="gridOn" :items="products" :select-all="selectAll" @edit="edit" @delete="deleteItems" @update-item="updateItem" />
-            <product-table-list v-else ref="productTableList" :items="products" :search="search" @edit="edit" @delete="deleteItems" @selected="afterSelectedEventsOnTableList" />
+            <div v-if="$apollo.queries.products.loading" class="text-center mt-5">
+                <p>Loading please wait...</p>
+            </div>
+            <div v-else>
+                <product-grid-view v-if="gridOn" :items="products" :select-all="selectAll" @edit="edit" @delete="deleteItems" @update-item="updateItem" />
+                <product-table-list v-else ref="productTableList" :items="products" :search="search" @edit="edit" @delete="deleteItems" @selected="afterSelectedEventsOnTableList" />
+            </div>
         </v-card-text>
     </v-card>
 </template>

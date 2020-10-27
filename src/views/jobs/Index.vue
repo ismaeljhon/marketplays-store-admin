@@ -35,6 +35,8 @@
                 v-model="tableItems.selected"
                 show-select
                 @input="afterSelectedEventsOnTableList"
+                :loading="$apollo.queries.jobs.loading"
+                loading-text="Loading please wait..."
             >
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
