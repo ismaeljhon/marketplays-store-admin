@@ -319,7 +319,7 @@ export default {
             this.$refs.observer.reset()
         },
         async submit() {
-            let allowedFields = ["title", "slug", "description", "instructions", "biddable", "openingMarketBid", "type", "timeframe", "seoTitle", "seoKeywords", "seo_description", "currency", "requiredCertificates", "category"]
+            let allowedFields = ["title", "slug", "description", "instructions", "biddable", "openingMarketBid", "type", "timeframe", "seoTitle", "seoKeywords", "seoDescription", "currency", "requiredCertificates", "category"]
 
             this.job.openingMarketBid = parseFloat(this.job.openingMarketBid)
             this.job.timeframe = parseFloat(this.job.timeframe)
