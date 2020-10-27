@@ -15,7 +15,7 @@
               <v-list-item-title>{{ item.label }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-divider v-else></v-divider>
+          <v-divider v-else class="my-2"></v-divider>
         </div>
         
       </v-list>
@@ -88,7 +88,7 @@
         { key: "currency", label: "Currency", icon: "cash-multiple", disabled: true },
         { key: "taxes", label: "Taxes", icon: "bank", disabled: true },
         { key: "coupons", label: "Coupons", icon: "ticket-percent-outline", disabled: true },
-        { key: "department-requests", label: "Department Requests", icon: "message-alert-outline", icon_color: "orange darken-1", disabled: true },
+        { key: "department-requests", label: "Department Requests", icon: "phone-message-outline", icon_color: "orange darken-1", disabled: true },
       ]
     }),
     methods: {
