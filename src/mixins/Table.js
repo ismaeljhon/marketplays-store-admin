@@ -4,6 +4,7 @@
 import _debounce from 'lodash/debounce'
 import _forEach from 'lodash/forEach'
 import _capitalize from 'lodash/capitalize'
+import _startCase from 'lodash/startCase'
 import gql from 'graphql-tag'
 
 let TableMixin = {
@@ -18,7 +19,7 @@ let TableMixin = {
                 query: null,
                 options: {
                     page: 1,
-                    itemsPerPage: 5,
+                    itemsPerPage: 10,
                 }
             },
             tableItems: {
@@ -38,12 +39,12 @@ let TableMixin = {
                 return console.error("No MODEL to count")
             }
 
-            const countModelName = "count" + _capitalize(this.tableParams.model)
+            const countModelName = "count" + this.tableParams.model[0].toUpperCase() + (this.tableParams.model.substr(1))
 
             this.$apollo.addSmartQuery(countModelName, {
                 query: gql`
                     query {
-                        count${_capitalize(this.tableParams.model)}
+                        ${countModelName}
                     },
                 `,
                 update(data) {

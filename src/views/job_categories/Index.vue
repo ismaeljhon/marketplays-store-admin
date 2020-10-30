@@ -31,12 +31,14 @@
                 :search="search"
                 :headers="headers"
                 :items="jobCategories"
-                :items-per-page="5"
+                :items-per-page="tableParams.options.itemsPerPage"
                 v-model="tableItems.selected"
                 show-select
                 @input="afterSelectedEventsOnTableList"
-                :loading="$apollo.queries.jobCategories.loading"
+                :loading="loading"
                 loading-text="Loading please wait..."
+                :options.sync="tableParams.options"
+                :server-items-length="itemsCount"
             >
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
@@ -70,22 +72,6 @@ import gql from 'graphql-tag'
 export default {
     name: 'job-categories',
     mixins: [TableMixin],
-    apollo: {
-        jobCategories: {
-            query: gql`
-                query {
-                    jobCategories {
-                        _id,
-                        name
-                    }
-                }
-            `,
-            update(data) {
-                _forEach(data.jobCategories, o => { o.is_selected = false })
-                return data.jobCategories
-            }
-        }
-    },
     components: {
         JobCategoryFormModal,
     },
@@ -96,10 +82,17 @@ export default {
                 { text: 'Category Name', align: 'start', value: 'name', },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],
+            tableParams: {
+                model: 'jobCategories',
+                query: gql `{
+                    _id,
+                    name,
+                }`,
+            },
             tableItems: {
                 selected: []
             },
-            jobCategories: []
+            jobCategories: [],
         }
     },
     methods: {
@@ -121,7 +114,8 @@ export default {
                             icon: "success",
                             text: "Job Category(s) has been successfully deleted",
                         })
-                        this.$apollo.queries.jobCategories.refetch()
+                        this.getItems()
+                        this.itemsCount--
                     } else {
 
                     }
@@ -132,5 +126,12 @@ export default {
             this.tableItems.selected = items
         },
     },
+
+    mounted() {
+        this.getItems()
+    },
+    beforeDestroy() {
+        this.clearGetItems()
+    }
 }
 </script>

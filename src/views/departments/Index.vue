@@ -112,7 +112,6 @@ export default {
             }
         },
         departments: [],
-        model: 'Department'
     }),
     methods: {
         deleteItems(items) {

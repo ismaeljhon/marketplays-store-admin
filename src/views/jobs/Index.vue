@@ -31,12 +31,14 @@
                 :search="search"
                 :headers="headers"
                 :items="jobs"
-                :items-per-page="5"
+                :items-per-page="tableParams.options.itemsPerPage"
                 v-model="tableItems.selected"
                 show-select
                 @input="afterSelectedEventsOnTableList"
-                :loading="$apollo.queries.jobs.loading"
+                :loading="loading"
                 loading-text="Loading please wait..."
+                :options.sync="tableParams.options"
+                :server-items-length="itemsCount"
             >
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
@@ -69,23 +71,6 @@ import _forEach from 'lodash/forEach'
 
 export default {
     name: 'jobs',
-    apollo: {
-        jobs: {
-            query: gql`
-                query {
-                    jobs {
-                        _id,
-                        title,
-                        description,
-                    }
-                }
-            `,
-            update(data) {
-                _forEach(data.jobs, o => { o.is_selected = false })
-                return data.jobs
-            },
-        }
-    },
     mixins: [TableMixin],
     components: {
         JobFormModal,
@@ -98,6 +83,14 @@ export default {
                 { text: 'Description', align: 'start', value: 'description' },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],
+            tableParams: {
+                model: 'jobs',
+                query: gql `{
+                    _id,
+                    title,
+                    description,
+                }`,
+            },
             tableItems: {
                 selected: [],
             },
@@ -134,10 +127,12 @@ export default {
             this.tableItems.selected = items
         },
     },
-    watch: {
-        "tableItems.jobs"() {
-            console.log("triggered")
-        }
+    
+    mounted() {
+        this.getItems()
+    },
+    beforeDestroy() {
+        this.clearGetItems()
     }
 }
 </script>
