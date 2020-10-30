@@ -2,6 +2,8 @@
 *   Reusable table with pagination, sorting, and filter functions
 * */
 import _debounce from 'lodash/debounce'
+import _forEach from 'lodash/forEach'
+import _capitalize from 'lodash/capitalize'
 import gql from 'graphql-tag'
 
 let TableMixin = {
@@ -10,66 +12,117 @@ let TableMixin = {
     },
     data: function () {
         return {
-            tableItemsRoute: process.env.VUE_APP_URL, /* Route in for getting items from the api */
-            tableParams: {},
-            tableCurrentPage: 1,
-            tableItems: {
-                selected: []
+            tableItemsRoute: process.env.VUE_APP_GRAPHQL_URL, /* Route in for getting items from the api */
+            tableParams: {
+                model: null,
+                query: null,
+                options: {
+                    page: 1,
+                    itemsPerPage: 5,
+                }
             },
-
-            loading: false
+            tableItems: {
+                selected: [],
+            },
+            loading: false,
+            itemsCount: 0
         }
     },
     methods: {
-        getItems: function () {
-            this.loading = true;
+        countItems(model = null) {
+            if (model)
+                this.tableParams.model = model
 
-            return this.$http.get( this.tableItemsRoute + '?' + this.getQueryString())
-                .then( (response)=>{
-                    this.tableItems = response.data;
-                    this.getItemsCallback(response)
-
-                    this.loading = false;
-                })
-                .catch( (error)=>{
-                    this.loading = false;
-                })
-        },
-        getItemsCallback(response){
-            /* Can be overwritten */
-        },
-        debounceGetItems : _debounce(function(){
-            return this.getItems()
-        }, 350),
-        pageChange(page) {
-            this.tableCurrentPage = page
-        },
-        getQueryString() {
-            this.tableParams.page = this.tableCurrentPage
-
-            return Object.keys(this.tableParams).map(key => key + '=' + this.tableParams[key]).join('&');
-        },
-        sortingChanged(ctx) {
-            if(ctx.sortBy){
-                this.tableParams.sortBy = ctx.sortBy
-                this.tableParams.sortDesc = ctx.sortDesc
-            } else {
-                delete this.tableParams.sortBy
-                delete this.tableParams.sortDesc
+            if (!this.tableParams.model) {
+                this.loading = false
+                return console.error("No MODEL to count")
             }
 
-            this.getItems()
-        }
+            const countModelName = "count" + _capitalize(this.tableParams.model)
+
+            this.$apollo.addSmartQuery(countModelName, {
+                query: gql`
+                    query {
+                        count${_capitalize(this.tableParams.model)}
+                    },
+                `,
+                update(data) {
+                    this.itemsCount = data[countModelName]
+                },
+                fetchPolicy: 'no-cache'
+            })
+            this.$apollo.queries[countModelName].start()
+        },
+        getItems: function (model = null, queryString = null) {
+            this.loading = true;
+            if (model)
+                this.tableParams.model = model
+
+            if (queryString)
+                this.tableParams.queryString = queryString
+
+            if (!this.tableParams.model) {
+                this.loading = false
+                return console.error("No MODEL to fetch")
+            }
+
+            if (!this.tableParams.query) {
+                this.loading = false
+                return console.error("No QUERY initialized")
+            }
+
+            if (!this.itemsCount)
+                this.countItems()
+
+            this.$apollo.addSmartQuery(this.tableParams.model, {
+                query: gql`
+                    query {
+                        ${this.tableParams.model} (skip: ${this.tableItemsSkip}, limit: ${this.tableParams.options.itemsPerPage}) ${this.tableParams.query}
+                    }
+                `,
+                result ({ loading }) {
+                    this.loading = loading
+                },
+                update(data) {
+                    return data[this.tableParams.model]
+                },
+                fetchPolicy: 'no-cache'
+            })
+
+            this.$apollo.queries[this.tableParams.model].start()
+        },
+        refetch(model = null) {
+            if (model) {
+                this.tableParams.model = model
+            }
+
+            if (!this.tableParams.model) {
+                console.error("NO MODEL to refetch")
+            }
+
+            this.$apollo.queries[this.tableParams.model].refetch()
+        },
+        clearGetItems() {
+            if (this.$apollo.queries[this.tableParams.model])
+                this.$apollo.queries[this.tableParams.model].stop()
+        },
     },
     computed: {
         hasSelectedItems() {
             return this.tableItems.selected.length > 0
-        }
+        },
+        tableItemsSkip() {
+            return (this.tableParams.options.page - 1) * this.tableParams.options.itemsPerPage
+        },
     },
     watch: {
-        tableCurrentPage: {
-            handler: 'getItems',
+        "tableParams.options.page"() {
+            this.getItems()
         },
+        "tableParams.options.itemsPerPage"() {
+            this.tableParams.options.page = 1
+            this.getItems()
+        }
     }
 }
 

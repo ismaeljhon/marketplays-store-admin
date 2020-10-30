@@ -10,7 +10,7 @@
                         <v-icon left>mdi-download</v-icon>Export Departments
                     </download-csv>
                     
-                    <department-form-modal ref="deparmentFormModal" @saved="$apollo.queries.departments.refetch()" />
+                    <department-form-modal ref="deparmentFormModal" @saved="refetch()" />
                 </v-col>
                 <v-col cols="12">
                     <v-divider class="my-2"></v-divider>
@@ -24,22 +24,23 @@
                 <v-col cols="6">
                     <v-text-field dense filled single-line hide-details v-model="search" append-icon="mdi-magnify" label="Search"></v-text-field>
                 </v-col>
-                    
             </v-row>
-            
         </v-card-title>
         <v-card-text>
             <v-data-table
                 :search="search"
                 :headers="headers"
                 :items="departments"
-                :items-per-page="5"
+                :items-per-page="tableParams.options.itemsPerPage"
                 v-model="tableItems.selected"
                 show-select
                 @input="afterSelectedEventsOnTableList"
                 item-key="_id"
-                :loading="$apollo.queries.departments.loading"
                 loading-text="Loading please wait..."
+                :loading="loading"
+                :options.sync="tableParams.options"
+                :server-items-length="itemsCount"
+                
             >
                 <template slot="item.pricing" slot-scope="row">
                     {{ row.item.pricing | currency }}
@@ -85,28 +86,6 @@ export default {
     components: {
         DepartmentFormModal,
     },
-    apollo: {
-        departments: {
-            query: gql`
-                query {
-                    departments {
-                        _id,
-                        name,
-                        code,
-                        pricing,
-                        teamLead {
-                            _id,
-                            fullName
-                        }
-                    }
-                }
-            `,
-            update(data) {
-                _forEach(data.departments, o => { o.is_selected = false })
-                return data.departments
-            }
-        }
-    },
     data: () => ({
         search: null,
         headers: [
@@ -116,8 +95,21 @@ export default {
             { text: 'Team Lead', align: 'start', value: 'teamLead' },
             { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
         ],
-        tableItems: {
-            selected: []
+        tableParams: {
+            model: 'departments',
+            query: gql `{
+                _id,
+                name,
+                code,
+                pricing,
+                teamLead {
+                    _id,
+                    fullName
+                }
+            }`,
+            options: {
+                itemsPerPage: 2,
+            }
         },
         departments: [],
         model: 'Department'
@@ -142,9 +134,8 @@ export default {
                             icon: "success",
                             text: "Department(s) has been successfully deleted",
                         })
-                        this.$apollo.queries.departments.refetch()
-                    } else {
-
+                        this.getItems()
+                        this.itemsCount--
                     }
                 }
             });
@@ -157,11 +148,11 @@ export default {
             this.tableItems.selected = items
         },
     },
-    computed: {
-        items() {
-            this.tableItems.selected = _filter(this.departments, { is_selected: true })
-            return this.departments
-        },
+    mounted() {
+        this.getItems()
     },
+    beforeDestroy() {
+        this.clearGetItems()
+    }
 }
 </script>

@@ -83,7 +83,7 @@ export default {
             update(data) {
                 _forEach(data.jobs, o => { o.is_selected = false })
                 return data.jobs
-            }
+            },
         }
     },
     mixins: [TableMixin],
@@ -99,7 +99,7 @@ export default {
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],
             tableItems: {
-                selected: []
+                selected: [],
             },
             jobs: []
         }
@@ -134,5 +134,10 @@ export default {
             this.tableItems.selected = items
         },
     },
+    watch: {
+        "tableItems.jobs"() {
+            console.log("triggered")
+        }
+    }
 }
 </script>
