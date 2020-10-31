@@ -31,7 +31,6 @@
                 :search="search"
                 :headers="headers"
                 :items="jobs"
-                :items-per-page="tableParams.options.itemsPerPage"
                 v-model="tableItems.selected"
                 show-select
                 @input="afterSelectedEventsOnTableList"
