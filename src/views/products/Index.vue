@@ -113,9 +113,6 @@ export default {
                     name,
                     pricing,
                 }`,
-                options: {
-                    itemsPerPage: 1,
-                }
             },
             services: [],
         }

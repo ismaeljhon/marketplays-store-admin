@@ -106,9 +106,6 @@ export default {
                     fullName
                 }
             }`,
-            options: {
-                itemsPerPage: 2,
-            }
         },
         departments: [],
     }),
