@@ -3,13 +3,16 @@
         <v-data-table
             :search="search"
             :headers="headers"
-            :items="items"
-            :items-per-page="5"
+            :items.sync="items"
             v-model="selected"
             show-select
             @input="$emit('selected', selectedItems)"
             @dblclick:row="emitEdit"
             item-key="_id"
+            :options.sync="customOptions"
+            :server-items-length="itemsCount"
+            @update:page="$emit('refresh', customOptions)"
+            @update:items-per-page="$emit('refresh', customOptions)"
         >
             <template slot="item.pricing" slot-scope="row">
                 {{ row.item.pricing | currency }}
@@ -39,6 +42,7 @@
 <script>
 import ProductFormModal from '@/views/products/modals/Product'
 import _forEach from 'lodash/forEach'
+import _assign from 'lodash/assign'
 import UtilsMixin from '@/mixins/Utils'
 
 
@@ -53,6 +57,12 @@ export default {
         search: {
             type: String
         },
+        options: {
+            type: [Object, Array]
+        },
+        itemsCount: {
+            type: Number
+        }
     },
     data() {
         return {
@@ -61,7 +71,11 @@ export default {
                 { text: 'Pricing', align: 'start', value: 'pricing', width: "120px" },
                 { text: '', align: 'start', sortable: false, value: 'action', width: "100px" },
             ],
-            selected: []
+            selected: [],
+            customOptions: {
+                page: 1,
+                itemsPerPage: 1,
+            }
         }
     },
     methods: {
@@ -73,7 +87,10 @@ export default {
         selectedItems() {
             _forEach(this.selected, o => { o.is_selected = true })
             return this.selected
-        }
-    }
+        },
+    },
+    mounted() {
+        _assign(this.customOptions, this.options)
+    },
 }
 </script>

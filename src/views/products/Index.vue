@@ -6,10 +6,10 @@
                     <h3 class="mr-2"><v-icon left>mdi-cogs</v-icon> Products</h3>
                 </v-col>
                 <v-col cols="7" class="text-right">
-                    <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="products" style="cursor: pointer">
+                    <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="services" style="cursor: pointer">
                         <v-icon left>mdi-download</v-icon>  Export Products
                     </download-csv>
-                    <product-form-modal ref="productFormModal" @saved="$apollo.queries.products.refetch()" />
+                    <product-form-modal ref="productFormModal" @saved="refetch()" />
                 </v-col>
                 <v-col cols="12">
                     <v-divider class="my-2"></v-divider>
@@ -44,7 +44,7 @@
                         </template>
                         <span>Select All</span>
                     </v-tooltip>
-                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)"><v-icon left>close</v-icon> Delete Selected</v-btn>
+                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)"><v-icon left>mdi-close</v-icon> Delete Selected</v-btn>
                 </v-col>
                 <v-col cols="6">
                     <v-text-field dense filled v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>
@@ -52,12 +52,27 @@
             </v-row>
         </v-card-title>
         <v-card-text>
-            <div v-if="$apollo.queries.products.loading" class="text-center mt-5">
+            <div v-if="loading" class="text-center mt-5">
                 <p>Loading please wait...</p>
             </div>
             <div v-else>
-                <product-grid-view v-if="gridOn" :items="products" :select-all="selectAll" @edit="edit" @delete="deleteItems" @update-item="updateItem" />
-                <product-table-list v-else ref="productTableList" :items="products" :search="search" @edit="edit" @delete="deleteItems" @selected="afterSelectedEventsOnTableList" />
+                <product-grid-view v-if="gridOn" 
+                    :items="services" 
+                    :select-all="selectAll" 
+                    @edit="edit" 
+                    @delete="deleteItems"
+                />
+                <product-table-list v-else 
+                    ref="productTableList" 
+                    :items="services" 
+                    :search="search"
+                    :options="tableParams.options"
+                    :items-count="itemsCount"
+                    @refresh="refreshItems"
+                    @edit="edit" 
+                    @delete="deleteItems" 
+                    @selected="afterSelectedEventsOnTableList" 
+                />
             </div>
         </v-card-text>
     </v-card>
@@ -76,23 +91,6 @@ import gql from 'graphql-tag'
 export default {
     name: 'products',
     mixins: [TableMixin],
-    apollo: {
-        products: {
-            query: gql`
-                query {
-                    services {
-                        _id,
-                        name,
-                        pricing,
-                    }
-                }
-            `,
-            update(data) {
-                _forEach(data.services, o => { o.is_selected = false })
-                return data.services
-            }
-        }
-    },
     components: {
         ProductFormModal,
         ProductTableList,
@@ -107,7 +105,19 @@ export default {
                 selected: []
             },
             selectedItems: [],
-            products: [],
+
+            tableParams: {
+                model: 'services',
+                query: gql `{
+                    _id,
+                    name,
+                    pricing,
+                }`,
+                options: {
+                    itemsPerPage: 1,
+                }
+            },
+            services: [],
         }
     },
     methods: {
@@ -133,7 +143,8 @@ export default {
                             icon: "success",
                             text: "Service(s) has been successfully deleted",
                         })
-                        this.$apollo.queries.products.refetch()
+                        this.getItems()
+                        this.itemsCount--
                     } else {
 
                     }
@@ -145,6 +156,9 @@ export default {
         },
         updateItem(item) {
             this.tableItems.products = JSON.parse(JSON.stringify(this.updateCollectionItems(this.tableItems.products, item)))
+        },
+        refreshItems(customOptions) {
+            this.tableParams.options = customOptions
         }
     },
     watch: {
@@ -153,17 +167,23 @@ export default {
                 this.selectAll = false
         },
         selectAll(newValue) {
-            this.products = _map(this.products, o => { 
+            this.services = _map(this.services, o => { 
                 o.is_selected = newValue
                 return o 
             });
         },
         gridOn() {
-            this.products = _map(this.products, o => { 
+            this.services = _map(this.services, o => { 
                 o.is_selected = false
                 return o 
             });
         }
     },
+    mounted() {
+        this.getItems()
+    },
+    beforeDestroy() {
+        this.clearGetItems()
+    }
 }
 </script>
