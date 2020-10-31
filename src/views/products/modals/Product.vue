@@ -66,7 +66,7 @@
                                             :items="departments"
                                             hide-no-data
                                             item-text="name"
-                                            item-value="id"
+                                            item-value="_id"
                                             label="Department"
                                             placeholder="Select Department"
                                         ></v-autocomplete>
@@ -293,7 +293,7 @@ export default {
             this.$refs.observer.reset()
         },
         async submit() {
-            let allowedFields = ["name", "description", "shortDescription", "pricing", "tags", "slug", "workforceThreshold", "seoTitle", "seoKeywords", "seoDescription", "projectManager"]
+            let allowedFields = ["name", "description", "shortDescription", "pricing", "tags", "slug", "workforceThreshold", "seoTitle", "seoKeywords", "seoDescription", "projectManager", "department"]
             this.product.pricing = parseFloat(this.product.pricing)
             this.product.workforceThreshold = parseFloat(this.product.workforceThreshold)
 
