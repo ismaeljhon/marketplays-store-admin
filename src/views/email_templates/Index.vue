@@ -36,7 +36,6 @@
                 show-select
                 @input="afterSelectedEventsOnTableList"
             >
-                
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">

@@ -102,7 +102,6 @@ export default {
                 code,
                 pricing,
                 teamLead {
-                    _id,
                     fullName
                 }
             }`,
