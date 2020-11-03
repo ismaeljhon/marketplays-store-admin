@@ -194,9 +194,7 @@ export default {
                 seoKeywords: null,
                 seoDescription: null,
                 teamLead: {
-                    _id: null,
-                    fullName: null,
-                    email: null
+                    _id: null
                 },
             },
         } 

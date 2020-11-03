@@ -192,7 +192,9 @@ export default {
                         seoTitle,
                         seoKeywords,
                         seoDescription,
-                        projectManager,
+                        projectManager {
+                            _id
+                        }
                     }
                 }
             `,
