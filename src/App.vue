@@ -81,14 +81,14 @@
         { key: "services", label: "Products & Services", icon: "cogs", link: '/products' },
         { key: "subscriptions", label: "Subscriptions", icon: "youtube-subscription", disabled: true },
         { key: "job-categories", label: "Job Categories", icon: "shape-outline", link: '/job-categories' },
-        { key: "job-listing", label: "Job Listing", icon: "format-list-bulleted-type", link: '/jobs' },
+        { key: "job-listing", label: "Job Listing", icon: "briefcase-outline", link: '/jobs' },
         { key: "divider" },
         { key: "email-template", label: "Email Template", icon: "email-newsletter", link: '/email-templates' },
         { key: "payment-integration", label: "Payment Integration", icon: "credit-card-sync-outline", disabled: true },
         { key: "currency", label: "Currency", icon: "cash-multiple", disabled: true },
         { key: "taxes", label: "Taxes", icon: "bank", disabled: true },
         { key: "coupons", label: "Coupons", icon: "ticket-percent-outline", disabled: true },
-        { key: "department-requests", label: "Department Requests", icon: "phone-message-outline", icon_color: "orange darken-1", disabled: true },
+        { key: "department-requests", label: "Department Requests", icon: "phone-message-outline", icon_color: "orange darken-1", link: '/department-requests' },
       ]
     }),
     methods: {

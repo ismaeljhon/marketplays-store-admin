@@ -3,7 +3,7 @@
         <v-card-title>
             <v-row dense>
                 <v-col cols="5">
-                    <h3 class="mr-2"><v-icon left>mdi-format-list-bulleted-type</v-icon>Job Listing</h3>
+                    <h3 class="mr-2"><v-icon left>mdi-briefcase-outline</v-icon>Job Listing</h3>
                 </v-col>
                 <v-col cols="7" class="text-right">
                     <download-csv class="mr-2 v-btn v-btn--depressed v-btn--flat v-btn--outlined v-btn--tile theme--light v-size--small" :data="jobs" style="cursor: pointer">

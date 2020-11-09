@@ -35,6 +35,11 @@ Vue.use(VueRouter)
     name: 'Email Templates',
     component: () => import('@/views/email_templates/Index.vue')
   },
+  {
+    path: '/department-requests',
+    name: 'Department Requests',
+    component: () => import('@/views/department_requests/Index.vue')
+  },
 ]
 
 const router = new VueRouter({
