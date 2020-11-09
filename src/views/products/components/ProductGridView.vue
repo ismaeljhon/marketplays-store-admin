@@ -21,13 +21,12 @@
                 </v-img>
 
                 <v-card-actions>
-                    <v-checkbox
+                    <!-- <v-checkbox
                         v-model="item.is_selected"
                         class="py-0"
                         color="success"
                         @click.prevent="$emit('update-item', item)"
-                    ></v-checkbox>
-                    <v-spacer></v-spacer>
+                    ></v-checkbox> -->
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn v-bind="attrs" v-on="on" icon color="primary" @click.prevent="$emit('edit', item._id)">
@@ -36,6 +35,7 @@
                         </template>
                         <span>Edit this Product</span>
                     </v-tooltip>
+                    <v-spacer></v-spacer>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn v-bind="attrs" v-on="on" icon color="error" @click.prevent="$emit('delete', item)">

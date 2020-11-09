@@ -32,7 +32,6 @@
                 :headers="headers"
                 :items="jobs"
                 v-model="tableItems.selected"
-                show-select
                 @input="afterSelectedEventsOnTableList"
                 :loading="loading"
                 loading-text="Loading please wait..."

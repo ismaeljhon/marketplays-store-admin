@@ -36,7 +36,7 @@
                         </v-list>
                     </v-menu>
                     
-                    <v-tooltip bottom v-if="gridOn">
+                    <!-- <v-tooltip bottom v-if="gridOn">
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn v-bind="attrs" v-on="on" icon small tile class="mr-2" :color="hasSelectedItems ? 'primary' : ''" @click.prevent="selectAll = !selectAll">
                                 <v-icon>mdi-playlist-check</v-icon>
@@ -44,7 +44,7 @@
                         </template>
                         <span>Select All</span>
                     </v-tooltip>
-                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)"><v-icon left>mdi-close</v-icon> Delete Selected</v-btn>
+                    <v-btn v-if="hasSelectedItems" outlined small tile color="error" @click.prevent="deleteItems(tableItems.selected)"><v-icon left>mdi-close</v-icon> Delete Selected</v-btn> -->
                 </v-col>
                 <v-col cols="6">
                     <v-text-field dense filled v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details></v-text-field>

@@ -5,7 +5,6 @@
             :headers="headers"
             :items.sync="items"
             v-model="selected"
-            show-select
             @input="$emit('selected', selectedItems)"
             @dblclick:row="emitEdit"
             item-key="_id"
