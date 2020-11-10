@@ -25,7 +25,6 @@
                 :headers="headers"
                 :items="departmentRequests"
                 v-model="tableItems.selected"
-                show-select
                 @input="afterSelectedEventsOnTableList"
                 item-key="_id"
                 loading-text="Loading please wait..."
