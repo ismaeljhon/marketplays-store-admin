@@ -195,6 +195,9 @@ export default {
                         projectManager {
                             _id
                         }
+                        department {
+                            _id
+                        }
                     }
                 }
             `,
@@ -204,11 +207,20 @@ export default {
                 }
             },
             update(data) {
+                if (data.service.projectManager) {
+                    data.service.projectManager = data.service.projectManager._id
+                }
+
+                if (data.service.department) {
+                    data.service.department = data.service.department._id
+                }
+
                 return data.service
             },
             skip () {
                 return true
-            }
+            },
+            fetchPolicy: 'no-cache'
         },
         users: {
             query: gql`

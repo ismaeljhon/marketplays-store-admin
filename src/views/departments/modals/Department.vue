@@ -146,9 +146,7 @@ export default {
                         seoDescription,
                         seoKeywords,
                         teamLead {
-                            _id,
-                            email
-                            fullName
+                            _id
                         }
                     }
                 }
@@ -159,6 +157,9 @@ export default {
                 }
             },
             update(data) {
+                if (data.department.teamLead) {
+                    data.department.teamLead = data.department.teamLead._id
+                }
                 return data.department
             },
             skip () {
