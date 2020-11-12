@@ -63,17 +63,34 @@
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
                             <v-btn 
-                                small 
-                                outlined 
+                                small
                                 v-bind="attrs" 
                                 v-on="on" 
                                 color="primary"
                                 class="mr-2"
+                                @click.prevent="$refs.contactCustomerModal.show(row.item._id)"
+                                icon
                             >
-                                contact
+                                <v-icon>mdi-email-outline</v-icon>
                             </v-btn>
                         </template>
-                        <span>Contact Customer</span>
+                        <span>Email Customer</span>
+                    </v-tooltip>
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn 
+                                small
+                                v-bind="attrs" 
+                                v-on="on" 
+                                color="primary"
+                                class="mr-2"
+                                @click.prevent="$refs.contactCustomerModal.show(row.item._id)"
+                                icon
+                            >
+                                <v-icon>mdi-phone</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Call Customer</span>
                     </v-tooltip>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
@@ -81,9 +98,10 @@
                                 small 
                                 v-bind="attrs" 
                                 v-on="on" 
-                                color="primary"
+                                color="success"
+                                icon
                             >
-                                Create Job
+                                <v-icon>mdi-briefcase-outline</v-icon>
                             </v-btn>
                         </template>
                         <span>Create job listing for this request</span>
@@ -91,6 +109,8 @@
                 </template>
             </v-data-table>
         </v-card-text>
+
+        <contact-customer-modal ref="contactCustomerModal" />
     </v-card>
 </template>
 <script>
@@ -99,10 +119,14 @@ import _assign from 'lodash/assign'
 import _find from 'lodash/find'
 import _filter from 'lodash/filter'
 import _forEach from 'lodash/forEach'
+import ContactCustomerModal from '@/views/department_requests/modals/ContactCustomer'
 
 export default {
     name: 'department-requests',
     mixins: [TableMixin],
+    components: {
+        ContactCustomerModal
+    },
     data: () => ({
         search: null,
         headers: [
