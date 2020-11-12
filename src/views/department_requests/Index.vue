@@ -62,32 +62,28 @@
                 <template slot="item.action" slot-scope="row">
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="primary">
-                                <v-icon>mdi-email-outline</v-icon>
+                            <v-btn 
+                                small 
+                                outlined 
+                                v-bind="attrs" 
+                                v-on="on" 
+                                color="primary"
+                                class="mr-2"
+                            >
+                                contact
                             </v-btn>
                         </template>
-                        <span>Email Customer</span>
+                        <span>Contact Customer</span>
                     </v-tooltip>
                     <v-tooltip top>
                         <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="primary">
-                                <v-icon>mdi-cellphone</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Contact customer via mobile</span>
-                    </v-tooltip>
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn small icon v-bind="attrs" v-on="on" color="primary">
-                                <v-icon>mdi-phone</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Contact customer via telephone</span>
-                    </v-tooltip>
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn small v-bind="attrs" icon v-on="on" color="success">
-                                <v-icon>mdi-briefcase-outline</v-icon>
+                            <v-btn 
+                                small 
+                                v-bind="attrs" 
+                                v-on="on" 
+                                color="primary"
+                            >
+                                Create Job
                             </v-btn>
                         </template>
                         <span>Create job listing for this request</span>
@@ -110,17 +106,18 @@ export default {
     data: () => ({
         search: null,
         headers: [
-            { text: 'Service Subscription', align: 'start', value: 'service', width: '250px' },
+            { text: 'Service Subscription', align: 'start', value: 'service', width: '200px' },
+            { text: 'Order #', align: 'start', value: 'orderNumber', },
             { text: 'Customer', align: 'start', value: 'customer', },
             { text: 'Last action taken', align: 'start', value: 'lastActionTaken' },
             { text: 'Actions', align: 'start', sortable: false, value: 'action' },
         ],
         departmentRequests: [
-            { _id: 'dept-req-1001', lastActionTaken: 'contacted via phone', customer: { _id: 'cust-1001', fullName: 'Louise S. Franco', phoneNumber: '530-753-6027', mobileNumber: '+1111111', email: 'johndoe@gmail.com' }, service: { _id: 'srv-1001', name: 'Web Development' } },
-            { _id: 'dept-req-1002', lastActionTaken: 'contacted via mobile', customer: { _id: 'cust-1001', fullName: 'Gilbert Fillion', phoneNumber: '780.537.7671', mobileNumber: '+1111111', email: 'gilbon@gmail.com' }, service: { _id: 'srv-1001', name: 'Content Writing' } },
-            { _id: 'dept-req-1003', lastActionTaken: 'emailed', customer: { _id: 'cust-1001', fullName: 'Suzanne Carrier', phoneNumber: '+1-443-251-0729', mobileNumber: '+1111111', email: 'suzannier@gmail.com' }, service: { _id: 'srv-1001', name: 'SEO' } },
-            { _id: 'dept-req-1004', lastActionTaken: 'job created', customer: { _id: 'cust-1001', fullName: 'David Simard-Ouellet', phoneNumber: '714-693-6200', mobileNumber: '+1111111', email: 'davidlet@gmail.com' }, service: { _id: 'srv-1001', name: 'Accounts' } },
-            { _id: 'dept-req-1005', lastActionTaken: 'no action', customer: { _id: 'cust-1001', fullName: 'Pauline Blanchette', phoneNumber: '787-304-2591', mobileNumber: '+1111111', email: 'paultte@gmail.com' }, service: { _id: 'srv-1001', name: 'Web Design' } },
+            { _id: 'dept-req-1001', lastActionTaken: 'contacted via phone', orderNumber: 'ORD-0001', customer: { _id: 'cust-1001', fullName: 'Louise S. Franco', phoneNumber: '530-753-6027', mobileNumber: '+1111111', email: 'johndoe@gmail.com' }, service: { _id: 'srv-1001', name: 'Web Development' } },
+            { _id: 'dept-req-1002', lastActionTaken: 'contacted via mobile', orderNumber: 'ORD-0002', customer: { _id: 'cust-1001', fullName: 'Gilbert Fillion', phoneNumber: '780.537.7671', mobileNumber: '+1111111', email: 'gilbon@gmail.com' }, service: { _id: 'srv-1001', name: 'Content Writing' } },
+            { _id: 'dept-req-1003', lastActionTaken: 'emailed', orderNumber: 'ORD-0003', customer: { _id: 'cust-1001', fullName: 'Suzanne Carrier', phoneNumber: '+1-443-251-0729', mobileNumber: '+1111111', email: 'suzannier@gmail.com' }, service: { _id: 'srv-1001', name: 'SEO' } },
+            { _id: 'dept-req-1004', lastActionTaken: 'job created', orderNumber: 'ORD-0004', customer: { _id: 'cust-1001', fullName: 'David Simard-Ouellet', phoneNumber: '714-693-6200', mobileNumber: '+1111111', email: 'davidlet@gmail.com' }, service: { _id: 'srv-1001', name: 'Accounts' } },
+            { _id: 'dept-req-1005', lastActionTaken: 'no action', orderNumber: 'ORD-0005', customer: { _id: 'cust-1001', fullName: 'Pauline Blanchette', phoneNumber: '787-304-2591', mobileNumber: '+1111111', email: 'paultte@gmail.com' }, service: { _id: 'srv-1001', name: 'Web Design' } },
         ],
     }),
     methods: {
