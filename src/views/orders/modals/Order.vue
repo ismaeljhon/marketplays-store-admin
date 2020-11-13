@@ -2,7 +2,7 @@
     <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition" persistent>
         <template v-slot:activator="{ on, attrs }">
             <v-btn color="primary" tile dark v-bind="attrs" v-on="on" small>
-                <v-icon left>mdi-plus</v-icon>Add Department
+                <v-icon left>mdi-plus</v-icon>Add New Order
             </v-btn>
         </template>
         <v-card>
@@ -146,9 +146,7 @@ export default {
                         seoDescription,
                         seoKeywords,
                         teamLead {
-                            _id,
-                            email
-                            fullName
+                            _id
                         }
                     }
                 }
@@ -159,6 +157,9 @@ export default {
                 }
             },
             update(data) {
+                if (data.department.teamLead) {
+                    data.department.teamLead = data.department.teamLead._id
+                }
                 return data.department
             },
             skip () {

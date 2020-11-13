@@ -76,7 +76,7 @@
       drawer: null,
       navigation: [
         { key: "dashboard", label: "Dashboard", icon: "view-dashboard", disabled: true },
-        { key: "orders", label: "Orders", icon: "cart-outline", disabled: true },
+        { key: "orders", label: "Orders", icon: "cart-outline", link: '/orders'},
         { key: "departments", label: "Departments", icon: "domain", link: '/departments' },
         { key: "services", label: "Products & Services", icon: "cogs", link: '/products' },
         { key: "subscriptions", label: "Subscriptions", icon: "youtube-subscription", disabled: true },
